@@ -1,0 +1,126 @@
+/*
+ * Universidade Federal de São Carlos
+ * Bacharelado em Sistemas de Informação
+ * Trabalho de conclusão de curso
+ * Implementação de aplicativo para manipular Redes de Análise Paraconsistente RAP
+ */
+package br.com.paraconsistent.lpa2v.RAP;
+import br.com.paraconsistent.lpa2v.NAP;
+import br.com.paraconsistent.lpa2v.NAP;
+import java.io.Serializable;
+import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class RAPdataStruct implements Serializable {
+    
+    // declaração da Rede NAPcsd
+    //private String R;        // Nome da rede de análise paraconsistente  
+    private NAP nap;           // Novo Nó NAP para inserir na REDE RAP
+    private NAP napµ;          // Ponteiro para Nó NAP para grau de evidência favorável µ
+    private NAP napµ2;         // Ponteiro para Nó NAP para grau de evidência favorável µ2
+    private RAPdataStruct rapµ;          // Ponteiro para Rede RAP para grau de evidência favorável µ
+    private RAPdataStruct rapµ2;         // Ponteiro para Rede RAP para grau de evidência favorável µ2
+   
+       // Construtor da classe RAP
+    public RAPDataStruct() {
+    }
+    
+    // Construtor da classe RAP - com passagem de dois parametros NAP
+    public RAPdataStruct(NAP nap1,NAP nap2) {
+        this.napµ =  nap1;
+        this.napµ2 = nap2;
+    }
+
+    // Método para retornar Nó NAP de entrada µ
+    public NAP getNAPµ() {
+        return napµ;
+    }
+
+    // Método para conectar o Nó NAP de entrada µ
+    public void setNAPµ(NAP NAPµ) {
+        this.napµ = napµ;
+    }
+
+    // Método para retornar Nó NAP de entrada µ2
+    public NAP getNAPµ2() {
+        return napµ2;
+    }
+    
+    // Método para conectar o Nó NAP de entrada µ2
+    public void setNAPµ2(NAP NAPµ2) {
+        this.napµ2 = napµ2;
+    }
+
+    // Método para retornar REDE RAP conectado na entrada µ
+    public RAPdataStruct getRAPµ() {
+        return rapµ;
+    }
+
+    // Método para conectar a REDE NAP na entrada µ no NAP
+    public void setRAPµ(RAPdataStruct RAPµ) {
+        this.rapµ = rapµ;
+    }
+
+    // Método para retornar REDE RAP conectado na entrada µ2
+    public RAPdataStruct getRAPµ2() {
+        return rapµ2;
+    }
+
+    // Método para conectar a REDE NAP na entrada µ2 no NAP
+    public void setRAPµ2(RAPdataStruct RAPµ2) {
+        this.rapµ2 = rapµ2;
+    }
+
+    // Método para retornar o NAP Raiz
+    public NAP getNAP() {
+        return nap;
+    }
+
+    // Método para atualizar o nó NAP
+    public void setNAP(NAP nap) {
+        this.nap = nap;
+    }
+    
+
+    // Método para inserir um Nó NAP na Rede
+    public boolean insertNAP(NAP nap){
+        if(this.nap==null){
+            this.nap=nap;
+        }
+        else if(this.napµ==null){
+            this.napµ = new NAP();
+        }
+        else  if(this.napµ2==null){
+            this.napµ2 = new NAP();
+        }
+        return true;
+    }
+    
+    // Método para recuperar um Nó NAP na Rede
+    public NAP rescueNAP(String p){
+        if(this.nap==null){
+           return null;
+        }
+        else if(this.napµ==null){
+            this.napµ = new NAP();
+        }
+        else  if(this.napµ2==null){
+            this.napµ2 = new NAP();
+        }
+        return nap;
+    }
+    // Método para desconectar um Nó NAP na Rede
+    public void deleteNAP(String p){
+        if(this.nap!=null){
+        }
+        else if(this.napµ==null){
+            this.napµ = null;
+        }
+        else  if(this.napµ2==null){
+            this.napµ2 = null;
+        }
+    }
+
+}
