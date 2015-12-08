@@ -1,0 +1,861 @@
+/*
+ * Universidade Federal de São Carlos
+ * Bacharelado em Sistemas de Informação
+ * Trabalho de conclusão de curso
+ * Implementação de Componente para manipular Redes de Análise Paraconsistente RAP
+ */
+package br.paraconsistent.lpa2v.Cardiopatia;
+
+import br.com.paraconsistent.lpa2v.GCR;
+import br.com.paraconsistent.lpa2v.GCRest;
+import br.com.paraconsistent.lpa2v.FB;
+import br.com.paraconsistent.lpa2v.NAP;
+import br.com.paraconsistent.lpa2v.RAP.RAPdataStruct;
+import br.com.paraconsistent.lpa2v.modeler.Modeler;
+import java.io.IOException;
+import java.util.Scanner;
+
+public class TesteRAPDiagnosticoCardiopatias {
+    
+    // Declaravariáveis para 
+    public static void main(String[] args) throws IOException {
+    
+        //Exemplo Auxilio ao Diagnóstico de Cardiopatias
+        System.out.println("Exemplo Auxilio ao Diagnóstico de Cardiopatias da página 130 a 185");
+        System.out.println("Exemplos de Modelagem para Auxílio ao Diagnóstico de Doenças Cardiovasculares");
+        System.out.println(" ");
+
+        System.out.println("Riscos Controláveis");
+        System.out.println(" ");
+        // Exemplo modelagem da página 130 - Sedentarísmo
+        Modeler modSed = new Modeler();
+        modSed.setModelerName((String)"Sedentarismo - µ Sedentarismo");
+        Scanner inputSedX = new Scanner (System.in);
+        float sedA1;
+        sedA1 = (float)5.0; 
+        modSed.setA1(sedA1);
+        float sedA2;
+        sedA2 = (float)0.0; 
+        modSed.setA2(sedA2);
+        System.out.println("Informe frequencia de atividades fisica do paciente");
+        System.out.print("De (0) até (5) vezes por semana: ");
+        float sedX;
+        sedX = inputSedX.nextFloat(); 
+        modSed.setx(sedX);
+        // Outputs
+        System.out.println(" ");
+        System.out.println("Modeler ID   = "+modSed.getModelerID());
+        System.out.println("Modeler Name = "+modSed.getModelerName());
+        System.out.println("a1 = "+modSed.getA1()+"   a2 = "+modSed.getA2()+"   x = "+modSed.getx()+" vezes por semana ");
+        System.out.println("µ Sedentarismo = "+modSed.getModLinearCres());        
+        System.out.println(" ");
+        
+        // Exemplo modelagem da página 130 - Tabagismo 
+        Modeler modTab = new Modeler();
+        modTab.setModelerName((String)"Tabagismo - - Teste de Fangerström");
+        Scanner inputTabX = new Scanner (System.in);
+        modTab.setA1((float)0.0);
+        modTab.setA2((float)10.0);
+        System.out.println("Teste de Fangerström");
+        System.out.println("a. Quanto tempo após acordar fuma 1 cigarro?");
+        System.out.println("(0) Após 60 minutos");
+        System.out.println("(1) Entre 31 a 60 minutos");
+        System.out.println("(2) Entre 6 a 30 minutos");
+        System.out.println("(3) Entre 0 a 5 minutos");
+        System.out.println("b. Difícil suportar não fumar em lugares proibidos ?");
+        System.out.println("(0) Não");
+        System.out.println("(1) Sim");
+        System.out.println("c. Qual é o melhor cigarro do dia ?");
+        System.out.println("(1) Primeiro de Dia");
+        System.out.println("(0) Outros");
+        System.out.println("d. Quantos cigarros fuma por dia?");
+        System.out.println("(0) Menos de 10");
+        System.out.println("(1) De 11 a 20");
+        System.out.println("(2) De 21 a 30");
+        System.out.println("(3) Mais de 30");
+        System.out.println("e. Prefere fumar de manha?");
+        System.out.println("(0) Não");
+        System.out.println("(1) Sim");
+        System.out.println("f. Fuma mesmo doente?");
+        System.out.println("(0) Não");
+        System.out.println("(1) Sim");
+        System.out.print("Informe total de pontos do teste de Fangerström do paciente: ");
+        float tabX=-1;
+        while (tabX<0 ||tabX>10 ){
+            tabX = inputTabX.nextFloat(); 
+            modTab.setx(tabX);
+        }
+        // Outputs
+        System.out.println(" ");
+        System.out.println("Modeler ID   = "+modTab.getModelerID());
+        System.out.println("Modeler Name = "+modTab.getModelerName());
+        System.out.println("a1 = "+modTab.getA1()+"   a2 = "+modTab.getA2()+"   x = "+modTab.getx());
+        System.out.println("µ Tabagismo = "+modTab.getModLinearCres());        
+        System.out.println(" ");
+        
+        
+        // Exemplo modelagem da página 132 - Obesidade 
+        Modeler modIMCH = new Modeler();
+        Modeler modIMCM = new Modeler();
+        int sexo=-1;
+        Scanner inputSexo = new Scanner (System.in);
+        while (sexo<1 || sexo>2){
+            System.out.print("Informe o Sexo do paciente (1) para Homem e (2) para mulher: ");
+            sexo = inputSexo.nextInt(); 
+        }
+        if(sexo==1){
+            modIMCH.setModelerName((String)"Modelador Índice de Massa Corpórea para homens (IMCH) ");
+            modIMCH.setA1((float)25);
+            modIMCH.setA2((float)40);
+            Scanner inputImchX = new Scanner (System.in);
+            float ImchX=-1;
+            while (ImchX<25 ||ImchX>40 ){
+                System.out.print("Informe o IMC do paciente: ");
+                ImchX = inputImchX.nextFloat(); 
+                modIMCH.setx(ImchX);
+            }
+            System.out.println(" ");
+            System.out.println("Modeler ID   = "+modIMCH.getModelerID());
+            System.out.println("Modeler Name = "+modIMCH.getModelerName());
+            System.out.println("a1 = "+modIMCH.getA1()+"   a2 = "+modIMCH.getA2()+"   x = "+modIMCH.getx());
+            System.out.println("µ imc homem    = "+modIMCH.getModLinearCres());        
+            System.out.println(" ");
+        } else {
+            modIMCM.setModelerName((String)"Modelador Índice de Massa Corpórea para Mulheres (IMCM) ");
+            modIMCM.setA1((float)24);
+            modIMCM.setA2((float)39);
+            Scanner inputImcmX = new Scanner (System.in);
+            float ImcmX=-1;
+            while (ImcmX<24 ||ImcmX>39 ){
+                System.out.print("Informe o IMC da paciente: ");
+                ImcmX = inputImcmX.nextFloat(); 
+                modIMCM.setx(ImcmX);
+            }
+            System.out.println(" ");
+            System.out.println("Modeler ID   = "+modIMCM.getModelerID());
+            System.out.println("Modeler Name = "+modIMCM.getModelerName());
+            System.out.println("a1 = "+modIMCM.getA1()+"   a2 = "+modIMCM.getA2()+"   x = "+modIMCM.getx());
+            System.out.println("µ imc mulher    = "+modIMCM.getModLinearCres());        
+            System.out.println(" ");
+        }
+
+        System.out.println("Riscos Não Controláveis");
+        System.out.println(" ");
+
+        // Exemplo modelagem da página 132 - Raça ou cor da pele como fator de risco não controlável
+        Modeler modPele = new Modeler();
+        modPele.setModelerName((String)"Modelador de Raça ou Cor da Pele- µ Cor da Pele");
+        Scanner inputPeleX = new Scanner (System.in);
+        float PeleA1;
+        PeleA1 = (float)0.0; 
+        modPele.setA1(PeleA1);
+        float PeleA2;
+        PeleA2 = (float)4.0; 
+        modPele.setA2(PeleA2);
+        System.out.println("Descrição da Raça ou Cor da Pele");
+        System.out.println("(0) para Pele Branca");
+        System.out.println("(1) para Pele Morena Clara");
+        System.out.println("(2) para Pele Morena ");
+        System.out.println("(3) para Pele Morena Escura");
+        System.out.println("(4) para Pele Negra");
+        System.out.print("Informe a cor da pele do paciente: ");
+        float PeleX=-1;
+        while (PeleX<0 ||PeleX>4 ){
+            PeleX = inputPeleX.nextFloat(); 
+            modPele.setx(PeleX);
+        }
+        // Outputs
+        System.out.println(" ");
+        System.out.println("Modeler ID   = "+modPele.getModelerID());
+        System.out.println("Modeler Name = "+modPele.getModelerName());
+        System.out.println("a1 = "+modPele.getA1()+"   a2 = "+modPele.getA2()+"   x = "+modPele.getx());
+        System.out.println("µ Cor da pele = "+modPele.getModLinearCres());        
+        System.out.println(" ");
+        
+        // Exemplo modelagem da página 133 - Idade como fator de risco não controlável
+        Modeler modIdade = new Modeler();
+        modIdade.setModelerName((String)"Modelador de Idade - µ Idade");
+        Scanner inputIdadeX = new Scanner (System.in);
+        float IdadeA1;
+        IdadeA1 = (float)50.0; 
+        modIdade.setA1(IdadeA1);
+        float IdadeA2;
+        IdadeA2 = (float)80.0; 
+        modIdade.setA2(IdadeA2);
+        System.out.println("Descrição da Idade");
+        System.out.print("Informe a Idade do Paciente: ");
+        float IdadeX=-1;
+        while (IdadeX<0 ||IdadeX>150 ){
+            IdadeX = inputIdadeX.nextFloat(); 
+            modIdade.setx(IdadeX);
+        }
+        // Outputs
+        System.out.println(" ");
+        System.out.println("Modeler ID   = "+modIdade.getModelerID());
+        System.out.println("Modeler Name = "+modIdade.getModelerName());
+        System.out.println("a1 = "+modIdade.getA1()+"   a2 = "+modIdade.getA2()+"   x = "+modIdade.getx());
+        System.out.println("µ Idade = "+modIdade.getModLinearCres());        
+        System.out.println(" ");
+        
+        // Exemplo modelagem da página 132 - Histórico Familiar como fator de risco não controlável
+        Modeler modHist = new Modeler();
+        modHist.setModelerName((String)"Modelador de Histórico Familiar - µ Histórico");
+        Scanner inputHistX = new Scanner (System.in);
+        float HistA1;
+        HistA1 = (float)0.0; 
+        modHist.setA1(HistA1);
+        float HistA2;
+        HistA2 = (float)4.0; 
+        modHist.setA2(HistA2);
+        System.out.println("Opções do Histórico familiar de cardiopatias");
+        System.out.println("(0) Nenhuma ocorrência");
+        System.out.println("(1) Irmão");
+        System.out.println("(2) Pai ou Mãe");
+        System.out.println("(3) Pai e Mãe");
+        System.out.println("(4) Pai e Mãe e Avós");
+        System.out.print("Informe a O histórico familiar do paciente: ");
+        float HistX=-1;
+        while (HistX<0 ||HistX>4 ){
+            HistX = inputHistX.nextFloat(); 
+            modHist.setx(HistX);
+        }
+        // Outputs
+        System.out.println(" ");
+        System.out.println("Modeler ID   = "+modHist.getModelerID());
+        System.out.println("Modeler Name = "+modHist.getModelerName());
+        System.out.println("a1 = "+modHist.getA1()+"   a2 = "+modHist.getA2()+"   x = "+modHist.getx());
+        System.out.println("µ Histórico Familiar = "+modHist.getModLinearCres());        
+        System.out.println(" ");
+
+        System.out.println("Riscos Sintomáticos");
+        System.out.println(" ");
+
+        // Exemplo modelagem da página 133 - Doença Cardiovascular ou lesão cardiáca
+        Modeler modDoenca = new Modeler();
+        modDoenca.setModelerName((String)"Modelador Modelador Doença Cardiovascular - µ Doença Cardiovascular");
+        Scanner inputDoenca = new Scanner (System.in);
+        Scanner inputRemedio = new Scanner (System.in);
+        float DoencaA1;
+        DoencaA1 = (float)0.0; 
+        modDoenca.setA1(DoencaA1);
+        float DoencaA2;
+        DoencaA2 = (float)5.0; 
+        modDoenca.setA2(DoencaA2);
+        System.out.println("Descrição da Doença Cardiovascular");
+        System.out.println("(0) Não possui Doenca ");
+        System.out.println("(1) Hipertrofia Ventricular Esquerda");
+        System.out.println("(2) Angina ou Infarto do Miocárdio prévio");
+        System.out.println("(3) Revascularização Miocárdica prévi");
+        System.out.println("(4) Insuficiência Cardiáca");
+        System.out.print("O paciente sofre de das doenças cardiácas descritas acima  : ");
+        int Doenca=-1;
+        while (Doenca<0 ||Doenca>5 ){
+            Doenca = inputDoenca.nextInt(); 
+        }
+        if (Doenca==0)
+            modDoenca.setx(Doenca);
+        else {
+            int remedio=-1;
+            while (remedio<0 ||remedio>1 ){
+                System.out.print("O paciente toma medicação para as doenças cardiácas descritas: ");
+                remedio = inputRemedio.nextInt(); 
+            }
+            if(remedio==0){
+                Doenca=(int)4;
+                modDoenca.setx(Doenca);
+            } else{
+                Doenca=(int)5;
+                modDoenca.setx(Doenca);
+            }
+        }   
+        // Outputs
+        System.out.println(" ");
+        System.out.println("Modeler ID   = "+modDoenca.getModelerID());
+        System.out.println("Modeler Name = "+modDoenca.getModelerName());
+        System.out.println("a1 = "+modDoenca.getA1()+"   a2 = "+modDoenca.getA2()+"   x = "+modDoenca.getx());
+        System.out.println("µ Doença Cardiovascular= "+modDoenca.getModLinearCres());        
+        System.out.println(" ");
+        
+        // Exemplo modelagem da página 134 - Lesão Cardiáca
+        Modeler modLesao = new Modeler();
+        modLesao.setModelerName((String)"Modelador Lesão Cardiáca- µ Lesão Cardiaca");
+        Scanner inputLesao = new Scanner (System.in);
+        Scanner inputMedicamento = new Scanner (System.in);
+        float LesaoA1;
+        LesaoA1 = (float)0.0; 
+        modLesao.setA1(LesaoA1);
+        float LesaoA2;
+        LesaoA2 = (float)5.0; 
+        modLesao.setA2(LesaoA2);
+        System.out.println("Descrição de Lesão Cardiovascular");
+        System.out.println("(0) Não possui Lesão ");
+        System.out.println("(1) Acidente Isquêmico ou Vascular Cerebral");
+        System.out.println("(2) Doença Vascular Arterial Periférica");
+        System.out.println("(3) Retinopatia hipertensiva");
+        System.out.print("O paciente sofre de Lesão Cardiovascular descrita acima  : ");
+        int lesao=-1;
+        while (lesao<0 ||lesao>5 ){
+            lesao = inputLesao.nextInt(); 
+        }
+        int tratamento=-1;
+        if (lesao==0)
+            modLesao.setx(lesao);
+        else {
+            while (tratamento<0 ||tratamento>1 ){
+                System.out.print("O paciente toma medicação para as doenças cardiácas descritas: ");
+                tratamento = inputMedicamento.nextInt(); 
+            }
+            if(tratamento==0){
+                lesao=(int)4;
+                modLesao.setx(lesao);
+            } else{
+                lesao=(int)5;
+                modLesao.setx(lesao);
+            }
+        }
+        // Outputs
+        System.out.println(" ");
+        System.out.println("Modeler ID   = "+modLesao.getModelerID());
+        System.out.println("Modeler Name = "+modLesao.getModelerName());
+        System.out.println("a1 = "+modLesao.getA1()+"   a2 = "+modLesao.getA2()+"   x = "+modLesao.getx());
+        System.out.println("µ Lesão Cardiaca = "+modLesao.getModLinearCres());        
+        System.out.println(" ");
+
+        // Exemplo modelagem da página 135 - Diabetes
+        Modeler modDiabetes = new Modeler();
+        modDiabetes.setModelerName((String)"Modelador Diabetes - µ Diabetes");
+        Scanner inputDiabetes = new Scanner (System.in);
+        float DiabetesA1;
+        DiabetesA1 = (float)0.0; 
+        modDiabetes.setA1(DiabetesA1);
+        float DiabetesA2;
+        DiabetesA2 = (float)5.0; 
+        modDiabetes.setA2(DiabetesA2);
+        System.out.println("Descrição do Diabetes Melito");
+        System.out.println("(0) Não possui Diabetes ");
+        System.out.println("(1) Diabetes Leve");
+        System.out.println("(2) Diabetes Forte");
+        System.out.println("(3) Diabetes Grave");
+        System.out.print("O paciente tem Diabetes ? : ");
+        float diabetes=-1;
+        while (diabetes<0 ||diabetes>5 ){
+            diabetes = inputDiabetes.nextInt(); 
+        }
+        if (diabetes==0)
+            modDiabetes.setx(diabetes);
+        else {
+            if(diabetes==1){
+                diabetes=(float)2.5;
+                modDiabetes.setx(diabetes);
+            } else if(diabetes==2){
+                diabetes=(int)4;
+                modDiabetes.setx(diabetes);
+            } else if(diabetes==3){
+                diabetes=(int)5;
+                modDiabetes.setx(diabetes);
+            }
+        }
+        // Outputs
+        System.out.println(" ");
+        System.out.println("Modeler ID   = "+modDiabetes.getModelerID());
+        System.out.println("Modeler Name = "+modDiabetes.getModelerName());
+        System.out.println("a1 = "+modDiabetes.getA1()+"   a2 = "+modDiabetes.getA2()+"   x = "+modDiabetes.getx());
+        System.out.println("µ Diabetes Melito = "+modDiabetes.getModLinearCres());        
+        System.out.println(" ");
+
+        // Exemplo modelagem da página 135 - Mal estar
+        Modeler modMalEstar = new Modeler();
+        modMalEstar.setModelerName((String)"Modelador do Mal Estar - µ MalEstar");
+        Scanner inputMalEstar = new Scanner (System.in);
+        float MalEstarA1;
+        MalEstarA1 = (float)0.0; 
+        modMalEstar.setA1(MalEstarA1);
+        float MalEstarA2;
+        MalEstarA2 = (float)10.0; 
+        modMalEstar.setA2(MalEstarA2);
+        System.out.println("Sintomas de Mal Estar");
+        System.out.println("a. Tem dores de cabeça frequentes ou periódicas?");
+        System.out.println("(0) Não   (1) Sim    (2) Sim e Toma Remédios");
+        System.out.println("b. Tem dificuldades respiratórias ou palpitação?");
+        System.out.println("(0) Não   (1) Sim    (2) Sim e Toma Remédios");
+        System.out.println("c. Tem dificuldade ou dor para urinar?");
+        System.out.println("(0) Não   (1) Sim    (2) Sim e Toma Remédios");
+        System.out.println("d. Tem tonturas, náuseas, vômitos, vertigens?");
+        System.out.println("(0) Não   (1) Sim    (2) Sim e Toma Remédios");
+        System.out.println("e. Tem depressão?");
+        System.out.println("(0) Não   (1) Sim    (2) Sim e Toma Remédios");
+        System.out.print("Informe pontuação do Mal Estar  : ");
+        int malestar=-1;
+        while (malestar<0 ||malestar>10 ){
+            malestar = inputMalEstar.nextInt(); 
+            modMalEstar.setx(malestar);
+        }
+        // Outputs
+        System.out.println(" ");
+        System.out.println("Modeler ID   = "+modMalEstar.getModelerID());
+        System.out.println("Modeler Name = "+modMalEstar.getModelerName());
+        System.out.println("a1 = "+modMalEstar.getA1()+"   a2 = "+modMalEstar.getA2()+"   x = "+modMalEstar.getx());
+        System.out.println("µ MalEstar = "+modMalEstar.getModLinearCres());        
+        System.out.println(" ");
+        
+        // Exemplo modelagem da página 150 - Pressão Arterial Sistólica PAS
+        Modeler modPAS = new Modeler();
+        Modeler modPASLimite = new Modeler();
+        Modeler modPASLeve = new Modeler();
+        Modeler modPASModerada = new Modeler();
+        Modeler modPASGrave = new Modeler();
+        modPAS.setModelerName((String)"Modelador Pressão Arterial Sistólica - PAS ");
+        Scanner inputPAS = new Scanner (System.in);
+        modPAS.setA1((float)130);
+        modPAS.setA2((float)190);
+        float pas=-1;
+        System.out.print("Informe a pressão arterial sistólica PAS  = ");
+        while (pas<120 ||pas>190 ){
+            pas = inputPAS.nextInt(); 
+            modPAS.setx(pas);
+        }
+        System.out.println("Modeler ID   = "+modPAS.getModelerID()+"  Modeler Name = "+modPAS.getModelerName());
+        System.out.println("a1 = "+modPAS.getA1()+"   a2 = "+modPAS.getA2()+"   x = "+modPAS.getx());
+        System.out.println("µ Pressão Sistólica  = "+modPAS.getModLinearCres());        
+        System.out.println(" ");
+
+        // Modelador para Pressão Arterial Diastólica
+        Modeler modPAD = new Modeler();
+        Modeler modPADLimite = new Modeler();
+        Modeler modPADLeve = new Modeler();
+        Modeler modPADModerada = new Modeler();
+        Modeler modPADGrave = new Modeler();
+        modPAD.setModelerName((String)"Modelador Pressão Arterial Diastólica - PAD ");
+        Scanner inputPAD = new Scanner (System.in);
+        modPAD.setA1((float)70);
+        modPAD.setA2((float)120);
+        System.out.print("Informe a pressão arterial Disstólica PAD = ");
+        float pad=-1;
+        while (pad<70 ||pad>120 ){
+            pad = inputPAD.nextInt(); 
+            modPAD.setx(pad);
+        }
+        System.out.println("Modeler ID   = "+modPAS.getModelerID()+"   Modeler Name = "+modPAS.getModelerName());
+        System.out.println("a1 = "+modPAS.getA1()+"   a2 = "+modPAS.getA2()+"   x = "+modPAS.getx());
+        System.out.println("µ Pressão Diastólica  = "+modPAS.getModLinearCres());        
+        System.out.println(" ");
+
+        // Carga inicial para modelagem de hipertensão Moderada e Grave
+        modPASModerada.setx(pas);
+        modPADModerada.setx(pad);
+        modPASGrave.setx(pas);
+        modPADGrave.setx(pad);
+        
+        if (pas<=140 && pad<=90 ){
+            modPASLimite.setA1((float)130);
+            modPASLimite.setA2((float)140);
+            modPADLimite.setA1((float)85);
+            modPADLimite.setA2((float)90);
+            modPASLimite.setx(pas);
+            modPADLimite.setx(pad);
+            System.out.println("Pressão PAS  e PAD - Classificado como Abaixo de Limitrofe");
+            System.out.println("PAS a1 = "+modPASLimite.getA1()+"   PAS a2 = "+modPASLimite.getA2()+"   PAS x = "+modPASLimite.getx());
+            System.out.println("µ PAS Limite    = "+modPASLimite.getModLinearCres());        
+            System.out.println("PAD a1 = "+modPADLimite.getA1()+"   PAS a2 = "+modPADLimite.getA2()+"   PAS x = "+modPADLimite.getx());
+            System.out.println("µ PAD Limite    = "+modPADLimite.getModLinearCres());        
+        }
+        else if ((pas>140 && pad>90 )&&(pas<=160 && pad<=100 )){
+                modPASLeve.setA1((float)140);
+                modPASLeve.setA2((float)160);
+                modPADLeve.setA1((float)90);
+                modPADLeve.setA2((float)100);
+                modPASLeve.setx(pas);
+                modPADLeve.setx(pad);
+                System.out.println("Pressão PAS  e PAD - Classificado como Hipertensão LEVE");
+                System.out.println("PAS a1 = "+modPASLeve.getA1()+"   PAS a2 = "+modPASLeve.getA2()+"   PAS x = "+modPASLeve.getx());
+                System.out.println("µ PAS Leve    = "+modPASLeve.getModLinearCres());        
+                System.out.println("PAD a1 = "+modPADLeve.getA1()+"   PAS a2 = "+modPADLeve.getA2()+"   PAS x = "+modPADLeve.getx());
+                System.out.println("µ PAD Leve    = "+modPADLeve.getModLinearCres());        
+        }  if ((pas>160 && pad>100 )&&(pas<=170 && pad<=105 )){
+                modPASModerada.setA1((float)150);
+                modPASModerada.setA2((float)170);
+                modPADModerada.setA1((float)95);
+                modPADModerada.setA2((float)105);
+                modPASModerada.setx(pas);
+                modPADModerada.setx(pad);
+                System.out.println("Pressão PAS  e PAD - Classificado como Hipertensão MODERADA");
+                System.out.println("PAS a1 = "+modPASModerada.getA1()+"   PAS a2 = "+modPASModerada.getA2()+"   PAS x = "+modPASModerada.getx());
+                System.out.println("µ PAS Moderada    = "+modPASModerada.getModLinearCres());        
+                System.out.println("PAD a1 = "+modPADModerada.getA1()+"   PAD a2 = "+modPADModerada.getA2()+"   PAD x = "+modPADModerada.getx());
+                System.out.println("µ PAD Moderada    = "+modPADModerada.getModLinearCresMin5());        
+        }   if ((pas>170 && pad>105 )&&(pas<=180 && pad<=110 )){
+                modPASGrave.setA1((float)160);
+                modPASGrave.setA2((float)180);
+                modPADGrave.setA1((float)100);
+                modPADGrave.setA2((float)110);
+                modPASGrave.setx(pas);
+                modPADGrave.setx(pad);
+                System.out.println("Pressão PAS  e PAD - Classificado como Hipertensão GRAVE");
+                System.out.println("PAS a1 = "+modPASGrave.getA1()+"   PAS a2 = "+modPASGrave.getA2()+"   PAS x = "+modPASGrave.getx());
+                System.out.println("µ PAS Grave    = "+modPASGrave.getModLinearCres());        
+                System.out.println("PAD a1 = "+modPADGrave.getA1()+"   PAS a2 = "+modPADGrave.getA2()+"   PAS x = "+modPADGrave.getx());
+                System.out.println("µ PAD Grave    = "+modPADGrave.getModLinearCresMin5());        
+        }
+        System.out.println(" ");
+        
+        Scanner inputAnalise = new Scanner (System.in);
+        System.out.println("Dados Coletados - Deseja gerar Análise para Riscos de Doênças Cardiácas");
+        System.out.println("(0) Não ");
+        System.out.println("(1) Sim");
+        System.out.print("Gerar Análise ? : ");
+        System.out.println(" ");
+        float analise=-1;
+        while (analise<0 ||analise>1 ){
+            analise = inputAnalise.nextInt(); 
+        }
+        if (analise==0)
+            System.out.println("Encerrar Diagnóstico de Doênças Cardiovasculares");
+        else{
+            /*************************************************************************************************/
+            System.out.println("##################################################################################");
+            System.out.println("Simulação do Exemplo Auxilio ao Diagnóstico de Cardiopatias da página 130 a 185");
+            System.out.println(" ");
+            System.out.println("Configuração para Análise de Riscos Contraláveis");
+            System.out.println(" ");
+        
+            //Relação entre Sedentarismo e Tabagismo - CST
+            NAP napCST = new NAP();
+            napCST.setP((String)"Relação entre Sedentarismo e Tabagismo");
+            napCST.setµ((float)modSed.getModLinearCres());
+            napCST.setµ2((float)modTab.getModLinearCres());
+            System.out.println("Proposição = "+napCST.getP());
+            System.out.println("µ  = "+napCST.getµ()+"  µ2 = "+napCST.getµ2()+"  λ = "+napCST.getλ());
+            System.out.println("Gc = "+napCST.getGc()+"  Gct= "+napCST.getGct());
+            System.out.println("D  = "+napCST.getD()+"  GCR= "+napCST.getGCR()+"  φ  = "+napCST.getφ());
+            System.out.println("φE = "+napCST.getφE()+"  µER= "+napCST.getµER()+"  µctr= "+napCST.getµctr());
+            System.out.println(" ");
+
+            // Relação entre Tabagismo e Índice de Massa Corpórea - IMC
+            NAP napCTO = new NAP();
+            if(sexo==1){
+                napCTO.setP((String)"Relação entre Tabagismo e Índice de Massa Corpórea - IMC Masculino");
+                napCTO.setµ((float)modTab.getModLinearCres());
+                napCTO.setµ2((float)modIMCH.getModLinearCres());
+                System.out.println("Proposição = "+napCTO.getP());
+                System.out.println("µ  = "+napCTO.getµ()+"  µ2 = "+napCTO.getµ2()+"  λ = "+napCTO.getλ());
+                System.out.println("Gc = "+napCTO.getGc()+"  Gct= "+napCTO.getGct());
+                System.out.println("D  = "+napCTO.getD()+"  GCR= "+napCTO.getGCR()+"  φ  = "+napCTO.getφ());
+                System.out.println("φE = "+napCTO.getφE()+"  µER= "+napCTO.getµER()+"  µctr= "+napCTO.getµctr());
+                System.out.println(" ");
+            } else{
+                napCTO.setP((String)"Relação entre Tabagismo e Índice de Massa Corpórea - IMC Feminino");
+                napCTO.setµ((float)modTab.getModLinearCres());
+                napCTO.setµ2((float)modIMCM.getModLinearCres());
+                System.out.println("Proposição = "+napCTO.getP());
+                System.out.println("µ  = "+napCTO.getµ()+"  µ2 = "+napCTO.getµ2()+"  λ = "+napCTO.getλ());
+                System.out.println("Gc = "+napCTO.getGc()+"  Gct= "+napCTO.getGct());
+                System.out.println("D  = "+napCTO.getD()+"  GCR= "+napCTO.getGCR()+"  φ  = "+napCTO.getφ());
+                System.out.println("φE = "+napCTO.getφE()+"  µER= "+napCTO.getµER()+"  µctr= "+napCTO.getµctr());
+                System.out.println(" ");
+            }
+
+            // O paciente pertence ao grupo de risco controlável ?
+            NAP napC = new NAP();
+            napC.setP((String)"O paciente pertence ao grupo de risco controlável ? ");
+            napC.setµ(napCST.getµER());
+            napC.setµ2(napCTO.getµER());
+            System.out.println("Proposição = "+napC.getP());
+            System.out.println("µ  = "+napC.getµ()+"  µ2 = "+napC.getµ2()+"  λ = "+napC.getλ());
+            System.out.println("Gc = "+napC.getGc()+"  Gct= "+napC.getGct());
+            System.out.println("D  = "+napC.getD()+"  GCR= "+napC.getGCR()+"  φ  = "+napC.getφ());
+            System.out.println("µf = "+napC.getµf()+"  λf= "+napC.getλf());
+            System.out.println("φE = "+napC.getφE()+"  µER= "+napC.getµER()+"  µctr= "+napC.getµctr());
+        
+            System.out.println("Configuração para Análise de Riscos Não Contraláveis");
+            System.out.println(" ");
+        
+            //Relação entre Raça e Idade
+            NAP napNCRI = new NAP();
+            napNCRI.setP((String)"Relação entre Raça e Idade");
+            napNCRI.setµ((float)modPele.getModLinearCres());
+            napNCRI.setµ2((float)modIdade.getModLinearCres());
+            System.out.println("Proposição = "+napNCRI.getP());
+            System.out.println("µ  = "+napNCRI.getµ()+"  µ2 = "+napNCRI.getµ2()+"  λ = "+napNCRI.getλ());
+            System.out.println("Gc = "+napNCRI.getGc()+"  Gct= "+napNCRI.getGct());
+            System.out.println("D  = "+napNCRI.getD()+"  GCR= "+napNCRI.getGCR()+"  φ  = "+napNCRI.getφ());
+            System.out.println("φE = "+napNCRI.getφE()+"  µER= "+napNCRI.getµER()+"  µctr= "+napNCRI.getµctr());
+            System.out.println(" ");
+
+            // Relação Relação entre Idade e Histórico Familiar
+            NAP napNCIH = new NAP();
+            napNCIH.setP((String)"Relação entre Idade e Histórico Familiar");
+            napNCIH.setµ((float)modIdade.getModLinearCres());
+            napNCIH.setµ2((float)modHist.getModLinearCres());
+            System.out.println("Proposição = "+napNCIH.getP());
+            System.out.println("µ  = "+napNCIH.getµ()+"  µ2 = "+napNCIH.getµ2()+"  λ = "+napNCIH.getλ());
+            System.out.println("Gc = "+napNCIH.getGc()+"  Gct= "+napNCIH.getGct());
+            System.out.println("D  = "+napNCIH.getD()+"  GCR= "+napNCIH.getGCR()+"  φ  = "+napNCIH.getφ());
+            System.out.println("φE = "+napNCIH.getφE()+"  µER= "+napNCIH.getµER()+"  µctr= "+napNCIH.getµctr());
+            System.out.println(" ");
+
+            // O paciente pertence ao grupo de risco não controlável ?
+            NAP napNC = new NAP();
+            napNC.setP((String)"O paciente pertence ao grupo de risco não controlável ?");
+            napNC.setµ(napNCRI.getµER());
+            napNC.setµ2(napNCIH.getµER());
+            System.out.println("Proposição = "+napNC.getP());
+            System.out.println("µ  = "+napNC.getµ()+"  µ2 = "+napNC.getµ2()+"  λ = "+napNC.getλ());
+            System.out.println("Gc = "+napNC.getGc()+"  Gct= "+napNC.getGct());
+            System.out.println("D  = "+napNC.getD()+"  GCR= "+napNC.getGCR()+"  φ  = "+napNC.getφ());
+            System.out.println("φE = "+napNC.getφE()+"  µER= "+napNC.getµER()+"  µctr= "+napNC.getµctr());
+        
+
+            System.out.println("Configuração para Análise de Riscos Sintomáticos");
+            System.out.println(" ");
+        
+            //Relação entre Doênça Cardiáca e Diabetes Melito
+            NAP napSCD = new NAP();
+            napSCD.setP((String)"Relação entre Doênça Cardiáca e Diabetes Melito");
+            napSCD.setµ((float)modDoenca.getModLinearCres());
+            napSCD.setµ2((float)modDiabetes.getModLinearCres());
+            System.out.println("Proposição = "+napSCD.getP());
+            System.out.println("µ  = "+napSCD.getµ()+"  µ2 = "+napSCD.getµ2()+"  λ = "+napSCD.getλ());
+            System.out.println("Gc = "+napSCD.getGc()+"  Gct= "+napSCD.getGct());
+            System.out.println("D  = "+napSCD.getD()+"  GCR= "+napSCD.getGCR()+"  φ  = "+napSCD.getφ());
+            System.out.println("φE = "+napSCD.getφE()+"  µER= "+napSCD.getµER()+"  µctr= "+napSCD.getµctr());
+            System.out.println(" ");
+
+            // Relação entre Diabetes Melito e Lesão Cardiovascular 
+            NAP napSDL = new NAP();
+            napSDL.setP((String)"Relação entre Diabetes Melito e Lesão Cardiovascular ");
+            napSDL.setµ((float)modDiabetes.getModLinearCres());
+            napSDL.setµ2((float)modLesao.getModLinearCres());
+            System.out.println("Proposição = "+napSDL.getP());
+            System.out.println("µ  = "+napSDL.getµ()+"  µ2 = "+napSDL.getµ2()+"  λ = "+napSDL.getλ());
+            System.out.println("Gc = "+napSDL.getGc()+"  Gct= "+napSDL.getGct());
+            System.out.println("D  = "+napSDL.getD()+"  GCR= "+napSDL.getGCR()+"  φ  = "+napSDL.getφ());
+            System.out.println("φE = "+napSDL.getφE()+"  µER= "+napSDL.getµER()+"  µctr= "+napSDL.getµctr());
+            System.out.println(" ");
+            
+            // O paciente pertence ao grupo de Risco Sintomático ?
+            NAP napS = new NAP();
+            napS.setP((String)"O paciente pertence ao grupo de risco sintomático ?");
+            napS.setµ(napSCD.getµER());
+            napS.setµ2(napSDL.getµER());
+            System.out.println("Proposição = "+napS.getP());
+            System.out.println("µ  = "+napS.getµ()+"  µ2 = "+napS.getµ2()+"  λ = "+napS.getλ());
+            System.out.println("Gc = "+napS.getGc()+"  Gct= "+napS.getGct());
+            System.out.println("D  = "+napS.getD()+"  GCR= "+napS.getGCR()+"  φ  = "+napS.getφ());
+            System.out.println("φE = "+napS.getφE()+"  µER= "+napS.getµER()+"  µctr= "+napS.getµctr());
+
+            System.out.println("Classificação e Configuração para Análise dos Grupos de Riscos - GR");
+            System.out.println(" ");
+        
+            //Relação entre Risco Controlável e Risco Não Controlável C+NC
+            NAP napCNC = new NAP();
+            napCNC.setP((String)"Relação entre Risco Controlável e Risco Não Controlável C+NC");
+            napCNC.setµ((float)napC.getµER());
+            napCNC.setµ2((float)napNC.getµER());
+            System.out.println("Proposição = "+napCNC.getP());
+            System.out.println("µ  = "+napCNC.getµ()+"  µ2 = "+napCNC.getµ2()+"  λ = "+napCNC.getλ());
+            System.out.println("Gc = "+napCNC.getGc()+"  Gct= "+napCNC.getGct());
+            System.out.println("D  = "+napCNC.getD()+"  GCR= "+napCNC.getGCR()+"  φ = "+napCNC.getφ());
+            System.out.println("φE = "+napCNC.getφE()+"  µER= "+napCNC.getµER()+"  µctr= "+napCNC.getµctr());
+            System.out.println(" ");
+
+            // Relação entre Risco Não Controlável e Risco Sintomático NC+S
+            NAP napNCS = new NAP();
+            napNCS.setP((String)"Relação entre Risco Não Controlável e Risco Sintomático (NC+S) ");
+            napNCS.setµ((float)napNC.getµER());
+            napNCS.setµ2((float)napS.getµER());
+            System.out.println("Proposição = "+napNCS.getP());
+            System.out.println("µ  = "+napNCS.getµ()+"  µ2 = "+napNCS.getµ2()+"  λ = "+napNCS.getλ());
+            System.out.println("Gc = "+napNCS.getGc()+"  Gct= "+napNCS.getGct());
+            System.out.println("D  = "+napNCS.getD()+"  GCR= "+napNCS.getGCR()+"  φ  = "+napNCS.getφ());
+            System.out.println("φE = "+napNCS.getφE()+"  µER= "+napNCS.getµER()+"  µctr= "+napNCS.getµctr());
+            System.out.println(" ");
+            
+            // O paciente pertence aos grupos de risco ? - C + NC + (C+NC) + S + (NC+S)
+            NAP napGR = new NAP();
+            napGR.setP((String)"O paciente pertence aos grupos de risco ?");
+            napGR.setµ(napCNC.getµER());
+            napGR.setµ2(napNCS.getµER());
+            System.out.println("Proposição = "+napGR.getP());
+            System.out.println("µ  = "+napGR.getµ()+"  µ2 = "+napGR.getµ2()+"  λ = "+napGR.getλ());
+            System.out.println("Gc = "+napGR.getGc()+"  Gct= "+napGR.getGct());
+            System.out.println("D  = "+napGR.getD()+"  GCR= "+napGR.getGCR()+"  φ  = "+napGR.getφ());
+            System.out.println("φE = "+napGR.getφE()+"  µER= "+napGR.getµER()+"  µctr= "+napGR.getµctr());
+            System.out.println(" ");
+
+            System.out.println("Exemplo 7.3 da página 146");
+            System.out.println("Aplicação da Topologia Classificação para Grupos Riscos ");
+            System.out.println(" ");
+        
+            // Instância Nó usando Topologia Classificação para C no intervalo [0 ; 0,2] 
+            NAP napC02 = new NAP();
+            napC02.setµ02(napC.getµER());
+            System.out.println("Classifição do Risco C no intervalo [0,0 ; 0,2] ");
+            System.out.println("Classificação intervalo Cµ02 = "+napC02.getμ02());
+            System.out.println(" ");
+
+            // Instância Nó usando Topologia Classificação para NC no intervalo [0,2 ; 0,4] 
+            NAP napNC24 = new NAP();
+            napNC24.setµ24(napNC.getµER());
+            System.out.println("Classifição do Risco NC no intervalo [0,2 ; 0,4] ");
+            System.out.println("Classificação intervalo NCµ24= "+napNC24.getμ24());
+            System.out.println(" ");
+
+            // Instância Nó CNCp - Saída µER para entradas classificadas
+            NAP napCNCp = new NAP();
+            napCNCp.setP((String)"Grau de Evidência de Pertinência Classificada CNCp ");
+            napCNCp.setµ(napC02.getμ02());
+            napCNCp.setµ2(napNC24.getμ24());
+            System.out.println("Proposição = "+napCNCp.getP());
+            System.out.println("φ  = "+napCNCp.getφ()+"  GCR= "+napCNCp.getGCR());
+            System.out.println("φE = "+napCNCp.getφE()+"  µER= "+napCNCp.getµER()+"  µctr= "+napCNCp.getµctr());
+            System.out.println(" ");
+
+            // Instância Nó usando Topologia Classificação para C+NC no intervalo [0,4 ; 0,6] 
+            NAP napCNC46 = new NAP();
+            napCNC46.setµ46(napCNCp.getµER());
+            System.out.println("Classifição do Risco C+NC no intervalo [0,4 ; 0,6] ");
+            System.out.println("Classificação intervalo CNCµ46= "+napCNC46.getμ46());
+            System.out.println(" ");
+
+            // Instância Nó usando Topologia Classificação para NC+S no intervalo [0,6 ; 0,8] 
+            NAP napNCS68 = new NAP();
+            napNCS68.setµ68(napNCS.getµER());
+            System.out.println("Classifição do Risco NC+S no intervalo [0,6 ; 0,8] ");
+            System.out.println("Classificação intervalo CNSµ68= "+napNCS68.getμ68());
+            System.out.println(" ");
+        
+            // Instância Nó GRp - Saída µER para entrada classificada
+            NAP napGRp = new NAP();
+            napGRp.setP((String)"Risco GRd : N NC (N+C) S (NC+S)");
+            napGRp.setµ(napCNC46.getμ46());
+            napGRp.setµ2(napNCS68.getμ68());
+            System.out.println("Proposição = "+napGRp.getP());
+            System.out.println("φ  = "+napGRp.getφ()+"  GCR= "+napGRp.getGCR());
+            System.out.println("φE = "+napGRp.getφE()+"  µER= "+napGRp.getµER()+"  µctr= "+napGRp.getµctr());
+            System.out.println(" ");
+
+            // Instância Nó usando Topologia Classificação para GR no intervalo [0,8 ; 1,0] 
+            // GR = C, NC, (C+NC), S, (NC+S)
+            NAP napGR81 = new NAP();
+            napGR81.setµ81(napGR.getµER());
+            System.out.println("Classifição do Risco( C NC (NC+S) S (NC+S) no intervalo [0,8 ; 1,0] ");
+            System.out.println("Classificação intervalo GRµ81= "+napGR81.getμ81());
+            System.out.println(" ");
+
+            // Instância Nó PGR - Resultado da Classificação das evidência do grupo risco analisadas
+            NAP napPGR = new NAP();
+            napPGR.setP((String)"Grau de Evidência de Pertinência a Grupo de Riscos");
+            napPGR.setµ(napGRp.getµER());
+            napPGR.setµ2(napGR81.getμ81());
+            System.out.println("Proposição = "+napPGR.getP());
+            System.out.println("µ  = "+napPGR.getµ()+"  µ2 = "+napPGR.getµ2()+"  λ = "+napPGR.getλ());
+            System.out.println("Gc = "+napPGR.getGc()+"  Gct= "+napPGR.getGct());
+            System.out.println("φ  = "+napPGR.getφ()+"  GCR= "+napPGR.getGCR());
+            System.out.println("φE = "+napPGR.getφE()+"  µER= "+napPGR.getµER()+"  µctr= "+napPGR.getµctr());
+            System.out.println(" ");
+
+            System.out.println("Configuração para Análise de Pressão Arterial Sistólica - PAS");
+            System.out.println(" ");
+        
+            //Relação entre PAS Limite e PAS Leve - PASLL
+            NAP napPASLL = new NAP();
+            napPASLL.setP((String)"Relação entre Pressão Arterial Sistólica - PAS Limite x Leve");
+            napPASLL.setµ((float)modPASLimite.getModLinearCres());
+            napPASLL.setµ2((float)modPASLeve.getModLinearCres());
+            System.out.println("Proposição = "+napPASLL.getP());
+            System.out.println("µ  = "+napPASLL.getµ()+"  µ2 = "+napPASLL.getµ2()+"  λ = "+napPASLL.getλ());
+            System.out.println("Gc = "+napPASLL.getGc()+"  Gct= "+napPASLL.getGct());
+            System.out.println("φ  = "+napPASLL.getφ()+"  GCR= "+napPASLL.getGCR()+"  GCest= "+napPASLL.getGcest());
+            System.out.println("φE = "+napPASLL.getφE()+"  µER= "+napPASLL.getµER()+"  µctr= "+napPASLL.getµctr());
+            System.out.println(" ");
+
+            //Relação entre (PAS Limite x PAS Leve) x Moderada - PASLLM
+            NAP napPASLLM = new NAP();
+            napPASLLM.setP((String)"Relação entre Pressão Arterial Sistólica - PAS (Limite x Leve) x Moderada");
+            napPASLLM.setµ((float)napPASLL.getµER());
+            napPASLLM.setµ2((float)modPASModerada.getModLinearCresMin5());
+            System.out.println("Proposição = "+napPASLLM.getP());
+            System.out.println("µ  = "+napPASLLM.getµ()+"  µ2 = "+napPASLLM.getµ2()+"  λ = "+napPASLLM.getλ());
+            System.out.println("Gc = "+napPASLLM.getGc()+"  Gct= "+napPASLLM.getGct());
+            System.out.println("φ  = "+napPASLLM.getφ()+"  GCR= "+napPASLLM.getGCR()+"  GCest= "+napPASLL.getGcest());
+            System.out.println("φE = "+napPASLLM.getφE()+"  µER= "+napPASLLM.getµER()+"  µctr= "+napPASLLM.getµctr());
+            System.out.println(" ");
+        
+            //Relação entre (PAS Limite x PAS Leve) x Moderada - PASLLM
+            NAP napPASLLMG = new NAP();
+            napPASLLMG.setP((String)"Relação entre Pressão Arterial Sistólica - PAS ((Limite x Leve) x Moderada) x Grave");
+            napPASLLMG.setµ((float)napPASLLM.getµER());
+            napPASLLMG.setµ2((float)modPASGrave.getModLinearCresMin5());
+            System.out.println("Proposição = "+napPASLLMG.getP());
+            System.out.println("µ  = "+napPASLLMG.getµ()+"  µ2 = "+napPASLLMG.getµ2()+"  λ = "+napPASLLMG.getλ());
+            System.out.println("Gc = "+napPASLLMG.getGc()+"  Gct= "+napPASLLMG.getGct());
+            System.out.println("φ  = "+napPASLLMG.getφ()+"  GCR= "+napPASLLMG.getGCR()+"  GCest= "+napPASLL.getGcest());
+            System.out.println("φE = "+napPASLLMG.getφE()+"  µER= "+napPASLLMG.getµER()+"  µctr= "+napPASLLMG.getµctr());
+            System.out.println(" ");
+
+            System.out.println("Configuração para Análise de Pressão Arterial Diastólica - PAD");
+            //System.out.println(" ");
+            
+            //Relação entre PAS Limite e PAS Leve - PASLL
+            NAP napPADLL = new NAP();
+            napPADLL.setP((String)"Relação entre Pressão Arterial Diastólica - PAD Limite x Leve");
+            napPADLL.setµ((float)modPADLimite.getModLinearCres());
+            napPADLL.setµ2((float)modPADLeve.getModLinearCres());
+            System.out.println("Proposição = "+napPADLL.getP());
+            System.out.println("µ  = "+napPADLL.getµ()+"  µ2 = "+napPADLL.getµ2()+"  λ = "+napPADLL.getλ());
+            System.out.println("Gc = "+napPADLL.getGc()+"  Gct= "+napPADLL.getGct());
+            System.out.println("φ  = "+napPADLL.getφ()+"  GCR= "+napPADLL.getGCR()+"  GCest= "+napPADLL.getGcest());
+            System.out.println("φE = "+napPADLL.getφE()+"  µER= "+napPADLL.getµER()+"  µctr= "+napPADLL.getµctr());
+            System.out.println(" ");
+
+            //Relação entre (PAS Limite x PAS Leve) x Moderada - PASLLM
+            NAP napPADLLM = new NAP();
+            napPADLLM.setP((String)"Relação entre Pressão Arterial Diastólica - PAD  (Limite x Leve) x Moderada");
+            napPADLLM.setµ((float)napPADLL.getµER());
+            napPADLLM.setµ2((float)modPADModerada.getModLinearCresMin5());
+            System.out.println("Proposição = "+napPADLLM.getP());
+            System.out.println("µ  = "+napPADLLM.getµ()+"  µ2 = "+napPADLLM.getµ2()+"  λ = "+napPADLLM.getλ());
+            System.out.println("Gc = "+napPADLLM.getGc()+"  Gct= "+napPADLLM.getGct());
+            System.out.println("φ  = "+napPADLLM.getφ()+"  GCR= "+napPADLLM.getGCR()+"  GCest= "+napPADLL.getGcest());
+            System.out.println("φE = "+napPADLLM.getφE()+"  µER= "+napPADLLM.getµER()+"  µctr= "+napPADLLM.getµctr());
+            System.out.println(" ");
+        
+            //Relação entre (PAS Limite x PAS Leve) x Moderada - PASLLM
+            NAP napPADLLMG = new NAP();
+            napPADLLMG.setP((String)"Relação entre Pressão Arterial Diastólica - PAD ((Limite x Leve) x Moderada) x Grave");
+            napPADLLMG.setµ((float)napPADLLM.getµER());
+            napPADLLMG.setµ2((float)modPADGrave.getModLinearCresMin5());
+            System.out.println("Proposição = "+napPADLLMG.getP());
+            System.out.println("µ  = "+napPADLLMG.getµ()+"  µ2 = "+napPADLLMG.getµ2()+"  λ = "+napPADLLMG.getλ());
+            System.out.println("Gc = "+napPADLLMG.getGc()+"  Gct= "+napPADLLMG.getGct());
+            System.out.println("φ  = "+napPADLLMG.getφ()+"  GCR= "+napPADLLMG.getGCR()+"  GCest= "+napPADLL.getGcest());
+            System.out.println("φE = "+napPADLLMG.getφE()+"  µER= "+napPADLLMG.getµER()+"  µctr= "+napPADLLMG.getµctr());
+            System.out.println(" ");
+
+            //Relação entre PAS x PAD  - PA
+            NAP napPA = new NAP();
+            napPA.setP((String)"Relação entre Pressão Arterial (Sistólica x Diastólica) - PA ");
+            napPA.setµ((float)napPASLLMG.getµER()); // PAS final
+            napPA.setµ2((float)napPADLLMG.getµER());// PAD final
+            System.out.println("Proposição = "+napPA.getP());
+            System.out.println("µ  = "+napPA.getµ()+"  µ2 = "+napPA.getµ2()+"  λ = "+napPA.getλ());
+            System.out.println("Gc = "+napPA.getGc()+"  Gct= "+napPA.getGct());
+            System.out.println("φ  = "+napPA.getφ()+"  GCR= "+napPA.getGCR()+"  GCest= "+napPADLL.getGcest());
+            System.out.println("φE = "+napPA.getφE()+"  µER= "+napPA.getµER()+"  µctr= "+napPA.getµctr());
+            System.out.println(" ");
+            
+            // Instância Nó GRDC - Resultado da Classificação das evidência do grupo risco analisadas
+            NAP napGRDC = new NAP();
+            napGRDC.setP((String)"Grau de Evidência de Pertinência a Grupo de Riscos de Doênças Cardiovasculares");
+            napGRDC.setµ(napPGR.getµER());
+            napGRDC.setµ2(napPA.getµER());
+            System.out.println("Proposição = "+napGRDC.getP());
+            System.out.println("µ  = "+napGRDC.getµ()+"  µ2 = "+napGRDC.getµ2()+"  λ = "+napGRDC.getλ());
+            System.out.println("Gc = "+napGRDC.getGc()+"  Gct= "+napGRDC.getGct());
+            System.out.println("φ  = "+napGRDC.getφ()+"  GCR= "+napGRDC.getGCR());
+            System.out.println("φE = "+napGRDC.getφE()+"  µER= "+napGRDC.getµER()+"  µctr= "+napGRDC.getµctr());
+            System.out.println(" ");
+        }
+    }
+}
+        
