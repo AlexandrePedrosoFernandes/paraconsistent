@@ -1,0 +1,27 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package br.com.paraconsistent.lpa2v;
+
+public interface CAPμct {
+    // Nome da proposição
+    public void setP(String p);
+    // 1 Valores de Entrada
+    public void setµ(float µ); 
+    public void setµ2(float µ2);
+    public void setμctrext(float µctr);
+    // 2 Teste condições iniciais para entrada φEext
+    // 3 Teste desativação µER
+    // 4 Cálculo do Grau de contradição normalizado  //public float getµctr();
+    // 5 Cálculo da Distância D //public float getD();
+    // 6 Cálculo do Grau de Certeza
+    // 7 Determinar Sinal de Saída
+    // 8 Sinalização do Intervalo de Certeza
+    public float getICAPφEs();
+    // 9 Saídas S1 e S2
+    public float getICAPµER();
+    public float getICAPφE();
+    // 10 Fim
+}
