@@ -1,0 +1,52 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ *main To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package br.com.paraconsistent.lpa2v.RAP;
+
+import br.com.paraconsistent.lpa2v.RAP.RAP;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+/**
+ *
+ * @author apedroso
+ */
+public class SerializerRAP {
+
+    @SuppressWarnings("ConvertToTryWithResources")
+    public void saveRAP(RAP rap, String rapName) {
+        try {
+            ObjectOutputStream output = new ObjectOutputStream(
+                    new FileOutputStream(rapName));
+            output.writeObject(rap);
+            output.close();
+        } catch (IOException ioe) {
+            System.err.println("Error to Record '" + rapName + "'.");
+        }
+    }
+
+    @SuppressWarnings("ConvertToTryWithResources")
+    public RAP loadRAP(String name) {
+        RAP rap = null;
+        try {
+            ObjectInputStream input = new ObjectInputStream(
+                    new FileInputStream(name));
+            rap = (RAP) input.readObject();
+            input.close();
+        } catch (FileNotFoundException fnfe) {
+            System.err.println("Arquivo nao encontrado (" + name + ").");
+        } catch (ClassNotFoundException cnfe) {
+            System.err.println("Classe 'Catalogo' nao encontrada.");
+        } catch (IOException ioe) {
+            System.err.println("Erro ao ler '" + name + "'.");
+        }
+        return rap;
+    }
+    
+}
