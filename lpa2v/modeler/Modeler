@@ -1,0 +1,196 @@
+/*
+ * Universidade Federal de São Carlos
+ * Bacharelado em Sistemas de Informação
+ * Trabalho de conclusão de curso
+ * Implementação de Componente para manipular Redes de Análise Paraconsistente RAP
+ */
+
+package br.com.paraconsistent.lpa2v.modeler;
+
+public class Modeler implements Comparable<Modeler>{
+    
+    // Declaração das variável Estática para incrementar novas intâncias
+    private static int sequence;
+    
+    // Declaração das variávéis para identificar cada instância desta classe
+    private int modelerID;
+    private String modelerName;
+    
+    // Declaração das variáveis para normalização da entrada µ
+    private float µ;
+    private float x;
+    private float a1;
+    private float a2;
+    
+    // construtor da classe modeler
+    public Modeler(){
+        this.modelerID=sequence++;
+    }
+
+    // construtor da classe modeler
+    public Modeler(String name, float a1, float a2){
+        this.modelerID=sequence++;
+        this.modelerName=name;
+        this.a1=a1;
+        this.a2=a2;
+    }
+
+    
+    // Método getModelerID para retornar o ID do modelador
+    public int getModelerID(){
+        return modelerID;
+    }
+
+    // Método setModelerName para atribuir nome ao modelador
+    public void setModelerName(String name){
+        this.modelerName=name;
+    }
+
+    // Método getModelerName para retornar nome do modelador
+    public String getModelerName(){
+        return modelerName;
+    }
+
+    // Método setA1 para atribuir variável a1
+    public void setA1(float a1){
+        this.a1=a1;
+    }
+
+    // Método getA1 para retornar conteúdo da variável a1
+    public float getA1(){
+        return a1;
+    }
+
+    // Método setA2 para atribuir variável a2
+    public void setA2(float a2){
+        this.a2=a2;
+    }
+
+    // Método getA2 para retornar conteúdo da variável a2
+    public float getA2(){
+        return a2;
+    }
+
+    // Método setX para atribuir variável x
+    public void setx(float x){
+        this.x=x;
+    }
+
+    // Método getX para retornar conteúdo da variável x
+    public float getx(){
+        return x;
+    }
+
+   // Método para modelagem linear crescente
+    public float getModLinearCres(){
+        if (a1<a2){
+            if(x<=a1)
+                µ=0;
+            else if(x>=a2)
+                    µ=1;
+                 else
+                    µ=(x-a1)/(a2-a1);
+        } else {
+            if(x<=a2)
+                µ=1;
+            else if(x>=a1)
+                    µ=0;
+                 else
+                    µ=(a1-x)/(a1-a2);
+        }
+        return µ;
+    }
+
+    // Método para modelagem linear decrescente
+    public float getModLinearDeCres(){
+        if(x<a1)
+            µ=1;
+        else if(x>a2)
+                µ=0;
+            else
+                µ=(x-a2)/(a1-a2);
+        return µ;
+    }
+
+    // Método para modelagem linear decrescente
+    public float getModLinearCresMin5(){
+        if (a1<a2){
+            if(x<=a1)
+                µ=(float)0.5;
+            else if(x>=a2)
+                    µ=1;
+                 else
+                    µ=(x-a1)/(a2-a1);
+        } else {
+            if(x<=a2)
+                µ=1;
+            else if(x>=a1)
+                    µ=(float)0.5;
+                 else
+                    µ=(a1-x)/(a1-a2);
+        }
+        return µ;
+    }
+
+    
+    // Método para modelagem não linear crescente
+    public float getModNoLinearCres(){
+        if(x<a1)
+            µ=0;
+        else if(x>a2)
+                µ=1;
+            else if(a1<=x && x<=((a1+a2)/2))
+                µ=2* (float) Math.pow((x-a1)/(a2-a1),2);
+            else if(((a1+a2)/2)<x && x<=a2)
+                    µ=1-(2* (float) Math.pow((x-a2)/(a2-a1),2));
+        return µ;
+    }
+
+    // Método para modelagem não linear decrescente
+    public float getModNoLinearDeCres(){
+        if(x>a2)
+            µ=0;
+        else if(x<a1)
+                µ=1;
+            else if(a1<=x && x<((a1+a2)/2))
+                µ=1-(2* (float) Math.pow((x-a1)/(a2-a1),2));
+            else if(((a1+a2)/2)<=x && x<=a2)
+                    µ=2* (float) Math.pow((x-a2)/(a2-a1),2);
+        return µ;
+    }
+
+    
+    //@Override
+    public String toString() {
+        return "(" + this.getModelerID() + ") " + this.getModelerName() + " -- ";
+    }
+
+    //@Override
+    public boolean equals(Object obj) {
+        boolean equals = false;
+        if (obj instanceof Modeler) {
+            equals = this.modelerName.equals(((Modeler) obj).modelerName);
+            if (equals) {
+                equals = (this.modelerID == ((Modeler) obj).modelerID);
+            }
+        }
+        return equals;
+    }
+
+    //@Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 29 * hash + (this.modelerName != null ? this.modelerName.hashCode() : 0);
+        hash = 29 * hash + this.modelerID;
+        return hash;
+    }
+
+    //@Override
+    public int compareTo(Modeler m) {
+        if (this.modelerID == m.modelerID) {
+            return this.modelerName.compareTo(m.modelerName);
+        } else {
+            return this.modelerID - m.modelerID;
+        }
+    }
+}
