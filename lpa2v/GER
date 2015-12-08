@@ -1,0 +1,28 @@
+/*
+ * Universidade Federal de São Carlos - Bacharelado em Sistemas de Informação
+ * Trabalho de conclusão de curso - Alexandre Pedroso Fernandes - RA: 435791
+ * Implementação de aplicativo para manipular Redes de Análise Paraconsistente RAP
+ */
+package br.com.paraconsistent.lpa2v;
+
+public interface GER {
+    // 1 Valores de Entrada
+    public void setµ(float µ);
+    public void setµ2(float µ2);
+    // 2 Cálculo do Grau de Contradição
+        //public float getGct();
+    // 3 Cálculo do Intervalo de Certeza
+    public float getφE();
+    // 4 Cálculo do Grau de Certeza
+        //public float getGc();
+    // 5 Cálculo da Distância D
+        //public float getD();
+    // 6 Cálculo do Grau de Certeza
+    // 7 Determinar Sinal de Saída
+    public float getIµER();
+    // 8 Sinalização do Intervalo de Certeza
+    public float getIGERφEs();
+    // 9 Saídas S1 e S2
+    // 10 Fim
+}
+
