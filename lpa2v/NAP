@@ -1,0 +1,988 @@
+/*
+ * Universidade Federal de São Carlos
+ * Bacharelado em Sistemas de Informação
+ * Trabalho de conclusão de curso
+ * Implementação de aplicativo para manipular Redes de Análise Paraconsistente RAP
+ */
+package br.com.paraconsistent.lpa2v;
+
+import br.com.paraconsistent.lpa2v.modeler.Modeler;
+
+public class NAP implements GCR,GCRest,FB, GER, GERIER, CSD, CAPφE, CAPμct, Comparable<NAP>{
+    
+    // Declaração das variável Estática para incrementar novas intâncias
+    private static int sequence;
+
+    // Declaração do nome da propasição P a ser tratado pelo NAP
+    private int napID;      /* Seguenciador de proposições a ser tratado pelo NAP */
+    private String p;       /* Nome da proposição a ser tratado pelo NAP */
+
+    // Declaração das variaveis de controle para recursos de otimização
+    private float C1;       /* Valor superior para controle de certeza (Vscc) */
+    private float C2;       /* Valor inferior para controle de certeza (Vicc) */
+    private float C3;       /* Valor superior para controle de contradição (Vscct) */
+    private float C4;       /* Valor inferior para controle de contradição (Vicct) */
+
+    // Declaração das graus de evidência favorável e desfavorável
+    private float µ;        /* Valor Grau de evidência favorável - fonte de informação 1 (µ1) mi  */
+    private float µ2;       /* Valor Grau de evidência favorável - fonte de informação 2 (µ2) mi  */
+    private float µf;       /* Valor Grau de evidência favorável final (µf) */
+
+    private float λ;        /* Valor Grau de evidência desfavorável (λ) lambda, sendo (λ= 1-µ2) */
+    private float λf;       /* Valor Grau de evidência desfavorável final (λf) lambda final, sendo (λf= λ-Gct) */
+    
+    // Declaração dos graus de certeza e contradição e seus respectivos módulos
+    private float Gc;       /* Valor Grau de Certeza (µ-λ)   */
+    private float Gct;      /* Valor Grau de Contradição (µ+λ)-1 */
+    private float Gcacresc; /* Valor Grau de Certeza Acrescido  */
+    private float Gcest;    /* Valor Grau de Certeza Estimado  */
+    private float GcmaxV;    /* Valor Grau de Certeza Estimado  */
+    private float GcmaxF;    /* Valor Grau de Certeza Estimado  */
+
+    // Declaração do Intervalo de certeza e graus de Certeza Maximo tendendo a verdadeiro e a falso
+    private float φ;        /* Intervalo de Certeza [φ=1-ModGct] */
+    private int   φs;       /* Sinalização do Intervalo de Certeza (φs>0 -> φs+ | φs<0 -> φs- | φs=0 -> φs0*/
+    private float φE;       /* Intervalo de Certeza reultante [φE=1-Mod(2µctr-1)] */
+
+    // Saídas Normalizadas (µER) em Grau de evidência favorável resultanta (µE) */
+    private float µE;       /* Transforma Grau de certeza real (GCR) em Grau de evidência favorável resultanta (µE) */
+    private float µER;      /* Transforma Grau de certeza real (GCR) em Grau de evidência favorável resultanta Real (µER) */
+    private float µctr;     /* Transforma Grau de contradição (Gct) em Grau de contradição normalizado (µctr) */
+    private float µEmaxV;   /* Valor Grau de evidência máximo tendendo a verdadeiro*/
+    private float µEmaxF;   /* Valor Grau de evidência máximo tendendo a falso*/
+
+    // Desativação de um Nó de entrada φEµant ou entrada φEλant e variáveis de ativação µat e λat
+    private float φEµant;   /* Valor Intervalor de evidência favorável do nó anterior (φEµant)  */
+    private float φEλant;   /* Valor Intervalor de evidência desfavorável do nó anterior (φEλant)  */
+    private float µat;      /* Valor Grau de evidência favorável ativado (µat)  */
+    private float λat;      /* Valor Grau de evidência desfavorável ativado (λat) */
+
+    // Interface CUBO  CAP de um Nó de entrada µ ou entrada λ
+    private float CGc;       /* Valor Grau de Certeza do Cubo () extraído no CUBO de análise paraconsistente CAP  */
+    private float CGct;      /* Valor Grau de Contradição do Cubo (1-φEext) extraído no CUBO de análise paraconsistente CAP*/
+    private float CGCR;      /* Valor Grau de Certeza Real do Cubo de análise paraconsistente CAP*/
+    private float φEext;     /* Valor Intervalor de evidência resultante do nó anterior (φEext)  */
+    private float φEint;     /* Valor Intervalor de evidência resultante do nó anterior (φEint)  */
+    private float μctrext;   /* Valor Grau de contradição normalizado do nó anterior (μctrext)  */
+
+    // Declaração da Distância
+    private float Dest;     /* Distância Dest  - Reta formada pela distância do Ponto (Gc;GCt) até o ponto (Gcest) - (λ - λf)  */
+    private float D;        /* Distância D - Reta formada pela distância do Ponto (Gc;GCt) até extremos V ou F */
+    private float CD;       /* Cálculo de D Para o Cubo */
+    
+    // Declaração das variaveis de saída
+    private int   Sd;       /* Variavel para saída discreta Sd referente ao estado do reticulado*/
+    private float S1;       /* Variavel para saída contínua S1*/
+    private float S2;       /* Variavel para saída da sinalização do intervalo de certeza S2*/
+    private float S3;       /* Variavel para saída da sinalização do intervalo de certeza S2*/
+    private float S4;       /* Variavel para saída da sinalização do intervalo de certeza S2*/
+    private float GCR;      /* Valor Grau de Certeza de Valor Real  */
+    private float GCRest;   /* Valor Grau de Certeza de Resultado Real  */
+
+    // Classificação e Ponderação das Evidências de entrada 
+    private float µ02, µ24, µ46, µ68, µ81;  // variáveis para subintervalos do intervalo [0,1]
+
+
+    // Construtor da classe NAP - (Nó de Análise Paraconsistente)
+    public NAP(){ 
+        this.napID=sequence++;
+        this.C1=(float)0.5;
+        this.C2=(float)-0.5;
+        this.C3=(float)0.5;
+        this.C4=(float)-0.5;
+    }
+
+    public NAP(String p, float µ, float µ2){ 
+        this.napID=sequence++;
+        this.C1=(float)0.5;
+        this.C2=(float)-0.5;
+        this.C3=(float)0.5;
+        this.C4=(float)-0.5;
+        this.p=(String)p;
+        this.µ=(float)µ;
+        this.µ2=(float)µ2;        
+        System.out.println("Construindo o NAP "+napID);
+    }
+    
+    // Set nome da proposição
+    public void setP(String p){
+        this.p = p;
+    }
+    
+    // Get nome da proposição
+    public int getnapID(){return this.napID;}
+    public String getP(){return this.p;}
+
+    
+    // Getters das variaveis de controle para recursos de otimização
+    public float getC1(){return this.C1;}
+    public float getC2(){return this.C2;}
+    public float getC3(){return this.C3;}
+    public float getC4(){return this.C4;}
+
+    // Getters dos graus de evidência favorável (µ1 e µ2) 
+    // e do grau de evidência desfavorável (λ=1-µ2)
+    public float getµ(){return this.µ;}
+    public float getµ2(){return this.µ2;}
+    public float getλ(){return this.λ=1-µ2;}
+    
+    // Getters dos graus de Certeza e Contradição
+    public float getGc(){return this.Gc=µ-λ;}         /* Valor Grau de Certeza = (µ-λ)   */
+    public float getGct(){return this.Gct=(µ+λ)-1;}   /* Valor Grau de Contradição = [(µ+λ)-1] */
+
+    // Setters das variaveis de controle para recursos de otimização
+    public void setC1(float C1){
+        if(C1>0 && C1<0.9){
+            this.C1=C1;
+        }
+        else{
+            throw new ImputException("Digite valor no intervalo fechado entre zero e um!");
+        }
+    }
+    public void setC2(float C2){
+        if(C2>-0.9 && C2<0){
+            this.C2=C2;
+        }
+        else{
+            throw new ImputException("Digite valor no intervalo fechado entre zero e um!");
+        }
+    }
+    public void setC3(float C3){
+        if(C3>0 && C3<0.9){
+            this.C3=C3;
+        }
+        else{
+            throw new ImputException("Digite valor no intervalo fechado entre zero e um!");
+        }
+    }
+    public void setC4(float C4){
+        if(C4>-0.9 && C4<0){
+            this.C4=C4;
+        }
+        else{
+            throw new ImputException("Digite valor no intervalo fechado entre zero e um!");
+        }
+    }
+    
+    // Settters dos graus de evidência favorável 
+    public void setµ(float µ){
+        if(µ>=0 && µ<=1){
+            this.µ=µ;
+        }
+        else{
+            throw new ImputException("Digite valor no intervalo fechado entre zero e um!");
+        }
+    }
+    
+    public void setµ2(float µ2){
+        if(µ2>=0 && µ2<=1){
+            this.µ2=µ2;
+        }
+        else{
+            throw new ImputException("Digite valor no intervalo fechado entre zero e um!");
+        }
+    }
+
+    //public void setλ(float λ){
+    //    if(λ>=0 && λ<=1){
+    //        this.λ=λ;
+    //    }
+    //    else{
+    //        throw new ImputException("Digite valor no intervalo fechado entre zero e um!");
+    //    }
+    //}
+
+    // Métodos get e set para Interface CSD
+    // Getters dos intervalo de evidência resultante (φEµant, φEλant) 
+    public float getφEµant(){return this.φEµant;}
+    public float getφEλant(){return this.φEλant;}
+
+    // Setters dos intervalor de evidência favorável φEµant
+    public void setφEµant(float φE){
+        if(φEµant>=-1 && φ<=1){
+            this.φEµant=φE;
+        }
+        else{
+            throw new ImputException("Digite valor no intervalo fechado entre zero e um!");
+        }
+    }
+
+    // Setters dos intervalor de evidência favorável φEλant
+    public void setφEλant(float φE){
+        if(φEλant>=-1 && φ<=1){
+            this.φEλant=φE;
+        }
+        else{
+            throw new ImputException("Digite valor no intervalo fechado entre zero e um!");
+        }
+    }
+    
+    // Métodos get e set para Interface CAP
+    // Getters dos intervalo de evidência resultante ( φEext) e (μctrext)
+    public float getφEext(){return this.φEext;}
+    public float getCGc(){return this.CGc;}
+    public float getCGct(){return this.CGct;}
+    public float getμctrext(){return this.μctrext;}
+    
+    // Setters dos intervalor de evidência favorável φEλant
+    public void setφEext(float φE){
+        if(φE>=-1 && φE<=1){
+            this.φEext=φE;
+        }
+        else{
+            throw new ImputException("Digite valor no intervalo fechado entre zero e um!");
+        }
+    }
+
+    // Setters dos intervalor de evidência favorável φEλant
+    public void setμctrext(float µctr){
+        if(µctr>=-1 && µctr<=1){
+            this.μctrext=µctr;
+        }
+        else{
+            throw new ImputException("Digite valor no intervalo fechado entre zero e um!");
+        }
+    }
+    
+    // Métodos get e set para Interface Classificação e Normalização de evidências para atribuir pesos às evidências
+    // Getters dos intervalo de evidência resultante ( φEext) e (μctrext)
+    public float getμ02(){return this.µ02;}
+    public float getμ24(){return this.µ24;}
+    public float getμ46(){return this.µ46;}
+    public float getμ68(){return this.µ68;}
+    public float getμ81(){return this.µ81;}
+    
+
+    // Settters para Unificação do universo de discurso para intervalo fechado [0.0;0.2]
+    public void setµ02(float µ02){
+        if(µ02<=0.2){
+              µ02=(float) (µ02/0.2); 
+              this.µ02=µ02;
+        }   else if(µ02>0.2){
+              this.µ02=1;
+            }
+        else{
+            throw new ImputException("Erro durante classificação ponderada  ");
+        }
+    }
+    
+    // Settters para Unificação do universo de discurso para intervalo fechado [0.2;0.4]
+    public void setµ24(float µ24){
+
+        if(µ24>0.4)
+            this.µ24=(float) 1;
+        else if(µ24<0.2)
+            this.µ24=(float)0.5;
+        else if(µ24>=0.2 && µ24<=0.4){
+            µ24=(float) (µ24/0.4); 
+            this.µ24=µ24;
+        }
+        
+        else{
+            throw new ImputException("Erro durante classificação ponderada  ");
+        }
+    }
+
+    // Settters para Unificação do universo de discurso para intervalo fechado [0.4;0.6]
+    public void setµ46(float µ46){
+        if(µ46>=0.4 && µ46<=0.6){
+            µ46=(float) ((µ46-0.2)/0.4); 
+            this.µ46=µ46;
+        } 
+        else if(µ46>0.6)
+            this.µ46=(float) 1;
+        else if(µ46<0.4)
+            this.µ46=(float)0.5;
+        else{
+            throw new ImputException("Erro durante classificação ponderada  ");
+        }
+    }
+
+    // Settters para Unificação do universo de discurso para intervalo fechado [0.6;0.8]
+    public void setµ68(float µ68){
+        if(µ68>=0.6 && µ68<=0.8){
+            µ68=(float) ((µ68-0.4)/0.4); 
+            this.µ68=µ68;
+        } 
+        else if(µ68>0.8)
+            this.µ68=(float) 1;
+        else if(µ68<0.6)
+            this.µ68=(float)0.5;
+        else{
+            throw new ImputException("Erro durante classificação ponderada  ");
+        }
+    }
+
+    // Settters para Unificação do universo de discurso para intervalo fechado [0.8;1.]
+    public void setµ81(float µ81){
+        if(µ81>=0.4 && µ81<=0.6){
+            µ81=(float) ((µ81-0.2)/0.4); 
+            this.µ81=µ81;
+        } 
+        else if(µ81>1.0)
+            this.µ81=(float) 1;
+        else if(µ81<0.8)
+            this.µ81=(float)0.5;
+        else{
+            throw new ImputException("Erro durante classificação ponderada  ");
+        }
+    }
+
+
+
+// Determinar estados lógicos extremos e não extremos
+    public int getEL(){
+        // Determinar estados lógicos extremos
+        if(Gc== 0 && Gct == 0){
+                System.out.println("ESTADO LÓGICO NULO");
+                return Sd=0; // Nulo
+        }
+        else if(Gc>=C1){
+                System.out.println("VERDADEIRO");
+                return Sd=1; // VERDADEIRO
+            }else{
+                if(Gc<=C2){
+                    System.out.println("FALSO");
+                    return Sd=2; // FALSO
+                }else{
+                    if(Gct>=C3){
+                        System.out.println("INCONSISTENTE");
+                        return Sd=3; // INCONSISTENTE
+                    }else{
+                        if(Gct<=C4){
+                            System.out.println("INDETERMINADO");
+                            return Sd=4;  // INDETERMINADO
+                        }else{
+                            // Determinar estados lógicos não extremos
+                            if (Gc>=0){ // Lado DIREITO do Reticulado da LPA2v
+                                if (Gct>=0){ // Lado DIREITO e ACIMA do Reticulado da LPA2v
+                                    if (Gct>=Gc){
+                                        System.out.println("INCONSISTENTE tendendo a VERDADEIRO");
+                                        return Sd=5; /* Inconsistente tendendo a verdadeiro  */
+                                    }else{
+                                        System.out.println("QUASE-VERDADEIRO tendendo a INCONSISTENTE");
+                                        return Sd=6; /* Quase-verdadeiro tendendo a Inconsistente */
+                                    }
+                                }else{ // Lado DIREITO e ABAIXO do Reticulado da LPA2v
+                                    if (Math.abs(Gct)>=Gc){
+                                        System.out.println("INDETERMINADO tendendo a VERDADEIRO");
+                                        return Sd=7; /* Indeterminado tendendo a verdadeiro  */
+                                    }else{
+                                        System.out.println("QUASE-VERDADEIRO tendendo a INDETERMINADO");
+                                        return Sd=8; /* Quase-verdadeiro tendendo a Indeterminado */
+                                    }
+                                }
+                            } else{         // Lado ESQUERDO do Reticulado da LPA2v
+                                if (Gct>=0){ // Lado ESQUERDO e ACIMA do Reticulado da LPA2v
+                                    if (Math.abs(Gc)< Gct){
+                                        System.out.println("INCONSISTENTE tendendo a FALSO");
+                                        return Sd=9;  /* Inconsistente tendendo a falso  */
+                                    }else{
+                                        System.out.println("QUASE-FALSO tendendo a INCONSISTENTE");
+                                        return Sd=10; /* Quase-falso tendendo a Inconsistente */
+                                    }
+                                } else{ // Lado ESQUERDO e ABAIXO do Reticulado da LPA2v
+                                    if (Math.abs(Gct)>=Math.abs(Gc)){
+                                        System.out.println("INDETERMINADO tendendo a FALSO");
+                                        return Sd=11; /* Indeterminado tendendo a falso  */
+                                    }else{
+                                        System.out.println("QUASE-FALSO tendendo a INDETERMINADO");
+                                        return Sd=12; /* quase-falso tendendo a Indeterminado */
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    /* Calculo do intervalo de certeza */
+    public float getφ(){
+        Gct=getGct();
+        if(Gct>=0)
+            φ = 1 - Math.abs(Gct);          /* Intervalo de Certeza [φ=1-|Gct|] para Gct >0 */
+        else 
+            φ = (1 - Math.abs(Gct))*(-1);   /* Intervalo de Certeza [φ=1-|Gct|] para Gct <0*/
+        return φ;
+    }
+
+    /* Determina a sinalização do intervalo de certeza (φs) para Interface GCR*/
+    public float getφs(){
+        µ=getµ();
+        λ=getλ();
+        if(µ+λ>1)
+            φs= +1;
+        else if (µ+λ<1)
+                φs= -1;
+             else
+                φs= 0;
+        return φs;
+    }
+    
+    /* Calculo do Grau de certeza máximos de verdade (GcmaxV) */
+    public float getGcmaxV(){
+        φ=getφ();
+        if(φ>0)
+            GcmaxV=φ;              /* Valor Grau de Certeza Maximo tendendo a Verdadeiro */
+        else
+            GcmaxV=Math.abs(φ);    /* Valor Grau de Certeza Maximo tendendo a Verdadeiro */
+        return GcmaxV;
+    }
+    
+    /* Calculo do Grau de certeza máximo de falsidade (GcmaxF) */
+    public float getGcmaxF(){
+        φ=getφ();
+        if(φ>0)
+            GcmaxF=φ*(-1);         /* Valor Grau de Certeza Maximo tendendo a Verdadeiro */
+        else
+            GcmaxF=φ;              /* Valor Grau de Certeza Maximo tendendo a Verdadeiro */
+        return GcmaxF;
+    }
+
+    /* Função para Calculo do Grado de Certeza Acrescido - Gcacresc */
+    public float getGcacresc(){
+        Gc=getGc();
+        φ=getφ();
+        if(Gc>0)
+            Gcacresc=(1-Math.abs(φ));
+        else 
+            Gcacresc=(Math.abs(φ)-1);
+        return Gcacresc;
+    }
+    
+    /* Calculo do Grau de Certeza Estimado */
+    public float getGcest(){
+        Gc=getGc();
+        φ=getφ();
+        Dest=getDest();
+        if(Gc>0){
+                if(Gct>0)
+                    Gcest=Gc+(1-φ);   /* Valor Grau de Certeza estimado para Grau de contradição GCt>0 */
+                else
+                    Gcest=Gc+(1-Math.abs(φ)); /* Valor Grau de Certeza estimado para Grau de contradição GCt>0 */
+                
+            } else{
+                if(Gct>0)
+                    Gcest=(Gc)+(φ-1);       /* Valor Grau de Certeza estimado para Grau de contradição GCt<0 */
+                else
+                    Gcest=(Gc)+(Math.abs(φ)-1); /* Valor Grau de Certeza estimado para Grau de contradição GCt<0 */
+            }
+        return Gcest;
+    }
+
+    /* Calculo do Grau de evidência desfavorável final */
+    public float getλf(){
+        λ=getλ();
+        Gc=getGc();
+        Gct=getGct();
+        φ=getφ();
+        Dest=getDest();
+        if (φ>0){
+            if(Gc>0)
+                λf=λ-Gct;              
+             else
+                λf=λ;
+        } else{
+                if(Gc>0)
+                    λf=λ;
+                else
+                    λf=λ-Gct;              
+        }
+        return λf;
+    }
+
+    /* Calculo do Grau de evidência favorável final */
+    public float getµf(){
+        µ=getµ();
+        λ=getλ();
+        Gc=getGc();
+        Gcest=getGcest();
+        if (φ>0){
+            if(Gc>0)
+                µf=µ;              
+            else
+                µf= λ+Gcest;
+        } else{
+            if(Gc>0)
+                µf= λ+Gcest;
+            else
+                µf=µ;              
+        }
+        return µf;
+    }
+
+    /**************************************************************************************************/
+    // Saídas para INTERFACE GCRest 
+    /* Função para Calculo da distância D1 entre do ponto (Gc,Gct) até o ponto do grau de certeza estimado (Gcest) λ - λf*/
+    public float getDest(){
+        Gc=getGc();
+        Gct=getGct();
+        φ=getφ();
+        /* Valor da distância da reta r entre o ponto B e o valor de certeza máximo V*/                  
+        Dest=(float) Math.sqrt((Math.pow((1-Math.abs(φ)),2)+(Math.pow(Gct,2))));   
+        return Dest;
+    }
+
+    /* Calculo do Grau de Certeza Estimado para INTERFACE GCRest  - Reescrita do Método Gcest*/
+    public float getIGCRest(){
+        Gc=getGc();
+        φ=getφ();
+        Dest=getDest();
+        if(φ<=0.25 || Dest>=1)
+            Gcest=(float)0.5;/* Valor Grau de Certeza estimado para Intervalo de certeza φ <= 0,25 ou Dest>=1 */
+        if(Gc>0){
+                if(Gct>0)
+                    Gcest=Gc+(1-φ);   /* Valor Grau de Certeza estimado para Grau de contradição GCt>0 */
+                else
+                    Gcest=Gc+(1-Math.abs(φ)); /* Valor Grau de Certeza estimado para Grau de contradição GCt>0 */
+                
+            } else{
+                if(Gct>0)
+                    Gcest=(Gc)+(φ-1);       /* Valor Grau de Certeza estimado para Grau de contradição GCt<0 */
+                else
+                    Gcest=(Gc)+(Math.abs(φ)-1); /* Valor Grau de Certeza estimado para Grau de contradição GCt<0 */
+            }
+        return Gcest;
+    }
+
+    /* Calculo do Grau de evidência desfavorável final para INTERFACE GCRest - Reescrita do Método Getλf*/
+    public float getIGCRestλf(){
+        λ=getλ();
+        Gc=getGc();
+        Gct=getGct();
+        φ=getφ();
+        Dest=getDest();
+        if(φ<=0.25 || Dest>=1)
+            λf=(float)0.5;      
+        else if (φ>0){
+            if(Gc>0)
+                λf=λ-Gct;              
+             else
+                λf=λ;
+            } else{
+                if(Gc>0)
+                    λf=λ;
+                else
+                    λf=λ-Gct;              
+            }
+        return λf;
+    }
+
+    /* Calculo do Grau de evidência favorável final para INTERFACE GCRest  - Reescrita do Método Getµf*/
+    public float getIGCRestµf(){
+        µ=getµ();
+        λ=getλ();
+        Gc=getGc();
+        Gcest=getGcest();
+        Dest=getDest();
+        if(φ<=0.25 || Dest>=1)
+            µf=(float)0.5;
+        else if (φ>0){
+                if(Gc>0)
+                    µf=µ;              
+                else
+                    µf= λ+Gcest;
+            } else{
+                if(Gc>0)
+                    µf= λ+Gcest;
+                else
+                    µf=µ;              
+            }
+        return µf;
+    }
+    
+    /* Função para Calculo do Grau de Certeza estimado para Grau de contradição igual a zero */
+    public float getIGCRestGct0(){
+        getDest();
+        Gcacresc=(float) Math.sqrt((Math.pow(Dest,2)+(Math.pow(Gct,2))));   
+        if(Gc>0)
+            Gcest=Gc+Gcacresc;
+        else 
+            Gcest=Gc-Gcacresc;
+        return Gcest;
+    }
+
+    /**************************************************************************************************/
+    // Método GCR e método D - Puro
+    
+    /* Função para Calculo da distância D entre o ponto máximo do Grau de Certeza Verdadeiro até o ponto (Gc,Gct) do reticulado paraconsistente*/
+    public float getD(){
+        Gct=getGct();
+        φ=getφ();
+        /* Valor da distância da reta r entre o ponto B e o valor de certeza máximo V*/                  
+        D=(float) Math.sqrt((Math.pow((1-Math.abs(Gc)),2)+(Math.pow(Gct,2))));   
+        return D;
+    }
+
+    /* Calculo do Grau de Certeza Real (GCR) */
+    public float getGCR(){
+        Gc=getGc();
+        φ=getφ();
+        D=getD();
+        if(Gc>0)
+            /* Valor Grau de Certeza REAL para Grau de contradição GCt>0 */
+            GCR=(1-Math.abs(D));    
+        else
+            /* Valor Grau de Certeza REAL para Grau de contradição GCt>0 */
+            GCR=(Math.abs(D)-1);    
+        return GCR;
+    }
+
+    /**************************************************************************************************/
+    // Saída da INTERFACE GCR - método IGCR - Reescrita do Método GCR
+    /* Calculo do Grau de Certeza Real para INTERFACE GCR */
+    public float getIGCR(){
+        Gc=getGc();
+        φ=getφ();
+        D=getD();
+        if(φ<=0.25 || D>=1)
+            /* Valor Grau de Certeza REAL para Intervalo de certeza φ <= 0,25 ou Dest>=1 */
+            GCR=(float)0.5; 
+        else if(Gc>0)
+                /* Valor Grau de Certeza REAL para Grau de contradição GCt>0 */
+                GCR=(1-Math.abs(D));    
+             else
+                /* Valor Grau de Certeza REAL para Grau de contradição GCt>0 */
+                GCR=(Math.abs(D)-1);    
+        return GCR;
+        
+    }
+
+    /**************************************************************************************************/
+    // Saída da INTERFACE FB - método IFB
+    /* Métodos para Interface Feedback - FB
+    /* Recuperação do Grau de contradição a partir do Grau de Certeza Resultante Real */
+    public float getIFBGctDeφ(float φ){
+        Gct=getGct();
+        if(φ>0)
+            Gct=1-Math.abs(φ);                  /* Representação do Intervalo de Certeza Real*/
+        else
+            Gct=(1-Math.abs(φ))*(-1);
+        return Gct;
+    }
+
+    ///* Recuperação do Grau de certeza a partir do Grau de Certeza Resultante Real */
+    public float getIFBGcDeGCR(float GCR){
+        if(GCR>0)
+            Gc= (float) ((float) 1-(Math.sqrt(Math.pow((GCR+1),2)-Math.pow(Gct,2))));
+        else
+            Gc=(float) (Math.sqrt(Math.pow((GCR+1),2)-Math.pow(Gct,2)))-1;
+        return Gc;
+    }
+
+    /* Recuperação do Grau de Evidência Favorável a partir do Graos de Certeza e Contradição */
+    public float getIFBµDeGc(float Gc,float Gct){
+        µ=(Gc+Gct+1)/2;
+        return µ;
+    }
+
+    /* Recuperação do Grau de Evidência Desfavorável a partir do Graos de Certeza e Contradição */
+    public float getIFBλDeGc(float Gc,float Gct){
+        λ=(-Gc+Gct+1)/2;
+        return λ;
+    }
+
+    /**************************************************************************************************/
+    /**************************************************************************************************/
+    // INTERFACE GER e GERIER - método IµER
+    // Saída Normalizadas para alimentar outro NAP
+
+    // Métodos getµE(), getµER(), getµctr() e getφE() - puros
+    /* Transforma Grau de certeza (Gc) em Grau de evidência resultante*/
+    public float getµE(){
+        µ=getµ();
+        λ=getλ();
+        µE = ((µ-λ)+1)/2;     // µE=Gc/2 
+        return µE;
+    }
+
+    /* Transforma Grau de certeza resultante real em Grau de evidência resultante real*/
+    public float getµER(){
+        GCR=getGCR();
+        µER= (GCR+1)/2;
+        return µER;
+    }
+
+    /* Transforma Grau de contradição (Gct) em Grau de contradição normalizado*/
+    public float getµctr(){
+        Gct=getGct();
+        µctr = (Gct+1)/2;
+        return µctr;
+    }
+
+    /* Cálculo do intervalo de certeza resultante*/
+    public float getφE(){
+        µctr=getµctr();
+        φE = 1-(Math.abs(2*µctr-1));  
+        return φE;
+    }
+
+    // Métodos getµE() , getµER() e getφE - Reescritos para as interfaces GER
+    /* Determina a sinalização do intervalo de certeza (φs) para Interface GCR*/
+    public float getIGERφEs(){
+        µ=getµ();
+        λ=getλ();
+        if(Gct>1)
+            φs= +1;
+        else if (Gct<1)
+                φs= -1;
+             else
+                φs= 0;
+        return φs;
+    }
+
+    /* Transforma Grau de certeza resultante real (GCR) em Grau de evidência resultante real*/
+    public float getIµER(){
+        D=getD();
+        GCR=getIGCR();
+        /* Valor Grau de Certeza estimado para Intervalo de certeza φ <= 0,25 ou Dest>=1 */
+        if(φ<=0.25 || D>=1)
+            µER=(float)0.5;
+        else
+            µER= (GCR+1)/2;
+        return µER;
+    }
+
+    /* Determina a sinalização do intervalo de certeza (φs) para Interface GCR*/
+    public float getIGERIERφEs(){
+        µ=getµ();
+        λ=getλ();
+        if(µctr>1)
+            φs= +1;
+        else if (µctr<1)
+                φs= -1;
+             else
+                φs= 0;
+        return φs;
+    }
+    
+    /* Calculo do Grau de evidência resultante máximos tendendo a verdadeiro (µEmaxV) */
+    public float getµEmaxV(){
+        φE=getφE();
+        µEmaxV = (1+φE)/2;       
+        return µEmaxV;
+    }
+    
+    /* Calculo do Grau de evidência resultante máximos tendendo a verdadeiro (µEmaxF) */
+    public float getµEmaxF(){
+        φE=getφE();
+        µEmaxF  = (1-φE)/2;      
+        return µEmaxF;
+    }
+
+    /* Métodos para desativação do NAP - INTERFACE CSD
+    /* Determina a sinalização do intervalo de certeza (φs) para Interface CSD */
+    public float getICSDφE(){
+        if(φEµant==1){
+            if(µ==0.5){
+                φE=φEλant;
+                return φE;
+            }
+        }
+        else 
+        if(φEλant==1){
+            if(λ==0.5){
+                φE=φEµant;
+                return φE;
+            }
+        }
+        getφE();
+        return φE;
+    }
+
+    /* Calculo do Intervalo de Evidência resultante Anterior (φEant) */
+    public float getICSDµER(){
+        if(φEµant==1){
+            if(µ==0.5){
+                µat=λ;
+                λat=1-λ;
+                µER= ((µat-λat)+1)/2;
+                return µER;
+            }
+        }
+        else 
+        if(φEλant==1){
+            if(λ==0.5){
+                µat=µ;
+                λat=1-µ;
+                µER= ((µat-λat)+1)/2;
+                return µER;
+            }
+        }
+        //getµctr();
+        getφE();
+        //getGc();
+        //getD();
+        //getIGCR();
+        getIµER();
+        return µER;
+    }
+
+    /* Recupera Grau de contradição (Gct) em Grau de contradição normalizado*/
+    public float getµctrDeφE(){
+        if(φE>0)
+            µctr = (1+(1-φE))/2;
+        else
+            µctr = (1-(1-φE))/2;
+        return µctr;
+    }
+
+    /* Métodos para CUBO DE ANÁLISE PARACONSISTENTE (CAP) - INTERFACE CAPφE com entrada φEext*/
+    /* Calculo do Intervalo de Evidência resultante Anterior (φEant) */
+    /* Calculo do Grau de evidência máximos de verdade (µEmaxV) */
+    // Reescrita do método getµEmaxV() para a interface CAPφE
+    public float getICAPµEmaxV(){
+        if (μctrext == 0)
+            φEext=getφEext();
+        else
+            φEext=getICAPφEext();
+        µEmaxV = (1+φEext)/2;       
+        return µEmaxV;
+    }
+    
+    // Reescrita do método getµEmaxF() para a interface CAPφE
+    public float getICAPµEmaxF(){
+        if (μctrext == 0)
+            φEext=getφEext();
+        else
+            φEext=getICAPφEext();
+        µEmaxF = (1-φEext)/2;       
+        return µEmaxF;
+    }
+
+    // Reescrita do método getD() convertido em GetCD para a interface CAPφE 
+    public float getCD(){
+        CGc=getCGc();
+        CGct=getCGct();
+        D=(float) Math.sqrt((Math.pow((1-Math.abs(CGc)),2)+(Math.pow(CGct,2))));   
+        return CD;
+    }
+
+    // Reescrita do método getGCR() convertido no método GetICAPGCR() 
+    // para a interface CAPφE 
+    public float getICAPGCR(){
+        if(µE>=µEmaxV)
+            CGc=φEext;
+        else
+            CGc=-φEext;
+        CGct=1-φEext;
+        CD=(float) Math.sqrt((Math.pow((1-Math.abs(CGc)),2)+(Math.pow(CGct,2))));
+        if(CGc>=0)
+            CGCR=1-CD;
+            else
+            CGCR=CD-1;
+        return CGCR;
+    }
+
+    // Reescrita do método getµER() convertido no método getICAPµER() para interface CAPφE
+    public float getICAPµER(){
+        if (μctrext == 0)
+            φEext=getφEext();
+        else
+            φEext=getICAPφEext();
+        if(φEext<=0.25){
+            µER=(float)0.5;
+            return µER;}
+        µEmaxV=getICAPµEmaxV();
+        µEmaxF=getICAPµEmaxF();
+        µE=getµE();
+        if(µE>=µEmaxV){
+            CGc=φEext;
+            CGct=1-φEext;
+            CD=getCD();
+            CGCR=getICAPGCR();
+            µER= (CGCR+1)/2;
+            return µER;
+        }else if (µE<=µEmaxF){
+                CD=getCD();
+                CGCR=getICAPGCR();
+                µER= (CGCR+1)/2;
+                return µER;
+        } 
+        Gc=getGc();
+        µctr=getµctr();
+        φEint=getφE();
+        D=getD();
+        if(φEint<=0.25 || D>=1){
+            µER=(float)0.5;
+            return µER;
+        }
+        GCR=getIGCR();
+        µER= (GCR+1)/2;
+        return µER;
+    }
+    
+    // Reescrita do método getφE() para a interface CAPφE
+    /* Cálculo do intervalo de certeza resultante*/
+    public float getICAPφE(){
+        φEext=getφEext();
+        if(φEext<=0.25){
+            φE=(float)φEext;
+            return φE;
+        }
+        µctr=getµctr();
+        φE = 1-(Math.abs(2*µctr-1));  
+        return φE;
+    }
+
+        // Reescrita do método getµEmaxF() para a interface CAPφE
+    public float getICAPφEs(){
+        µ=getµ();
+        λ=getλ();
+        if(µctr>1)
+            φs= +1;
+        else if (µctr<1)
+                φs= -1;
+             else
+                φs= 0;
+        return φs;
+    }
+
+    /* Métodos para CUBO DE ANÁLISE PARACONSISTENTE (CAP) - INTERFACE CAPμct com entrada μctrext */
+    /* Calculo do Intervalo de Evidência resultante Anterior (φEant) */
+    /* Calculo do Grau de contradição normalizado - externo (µctrext) */
+    // Reescrita do método getµEmaxV() para a interface CAPφE
+    
+    public float getICAPφEext(){
+        μctrext =getμctrext();
+        φEext = 1-(Math.abs(2*μctrext-1));  
+        return φEext;
+    }
+
+    
+    //@Override
+    public String toString() {
+        return "(" + this.getnapID() + ") " + this.getP() + " -- ";
+    }
+
+    //@Override
+    public boolean equals(Object obj) {
+        boolean equals = false;
+        if (obj instanceof NAP) {
+            equals = this.p.equals(((NAP) obj).p);
+            if (equals) {
+                equals = (this.napID == ((NAP) obj).napID);
+            }
+        }
+        return equals;
+    }
+
+    //@Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 29 * hash + (this.p != null ? this.p.hashCode() : 0);
+        hash = 29 * hash + this.napID;
+        return hash;
+    }
+
+    //@Override
+    public int compareTo(NAP n) {
+        if (this.napID == n.napID) {
+            return this.p.compareTo(n.p);
+        } else {
+            return this.napID - n.napID;
+        }
+    }
+    
+}
