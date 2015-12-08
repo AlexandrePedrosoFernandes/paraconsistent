@@ -1,0 +1,1023 @@
+package br.com.paraconsistent.lpa2v.RAP;
+
+/*
+ * Universidade Federal de São Carlos
+ * Bacharelado em Sistemas de Informação
+ * Trabalho de conclusão de curso
+ * Implementação de componente para manipular Redes de Análise Paraconsistente RAP
+ */
+
+import br.com.paraconsistent.lpa2v.RAP.RAPdataStruct;
+import br.com.paraconsistent.lpa2v.GCR;
+import br.com.paraconsistent.lpa2v.GCRest;
+import br.com.paraconsistent.lpa2v.FB;
+import br.com.paraconsistent.lpa2v.NAP;
+import br.com.paraconsistent.lpa2v.NAP;
+import br.com.paraconsistent.lpa2v.modeler.Modeler;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Scanner;
+
+/**
+ *
+ * @author ale
+ */
+public class TesteRAP {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) throws IOException {
+        
+        // Teste LPA2v (Algoritmo de Análise Paraconsistente - aap)
+        NAP aap1 = new NAP();
+        aap1.setC1((float) 0.50);
+        aap1.setC2((float) -0.50);
+        aap1.setC3((float) 0.50);
+        aap1.setC4((float) -0.50);
+        System.out.println("C1 = "+aap1.getC1());
+        System.out.println("C2 = "+aap1.getC2());
+        System.out.println("C3 = "+aap1.getC3());
+        System.out.println("C4 = "+aap1.getC4());
+        System.out.println(" ");
+        
+        //Exemplo 3.1 e 3.2 da página 42
+        System.out.println("Exemplo 3.1 e 3.2 da página 42");
+        NAP aap2 = new NAP();
+        aap2.setµ((float) 0.90);
+        aap2.setµ2((float) 0.40);
+        System.out.println("µ = "+aap2.getµ()+"  µ2 = "+aap2.getµ2()+"  λ = "+aap2.getλ());
+        System.out.println("Gc = "+aap2.getGc()+"  Gct= "+aap2.getGct());
+        System.out.println("Sd = "+aap2.getEL()+" -> Saida Discreta do estado lógico");
+        System.out.println("φ= "+aap2.getφ()+"   GcmaxV= "+aap2.getGcmaxV()+"  GcmaxF= "+aap2.getGcmaxF());
+        System.out.println("Dest= "+aap2.getDest()+"   Gcacresc= "+aap2.getGcacresc()+"  GCest= "+aap2.getGcest());
+        System.out.println("µf= "+aap2.getµf()+"  λf= "+aap2.getλf());
+        System.out.println("D= "+aap2.getD()+" GCR= "+aap2.getGCR());
+        System.out.println("Gct Recup= "+aap2.getIFBGctDeφ(aap2.getφ())+" Gc Recup= "+aap2.getIFBGcDeGCR(aap2.getGCR()));
+        System.out.println("µ1 Recup= "+aap2.getIFBµDeGc(aap2.getGc(),aap2.getGct())+" λ Recup= "+aap2.getIFBλDeGc(aap2.getGc(),aap2.getGct()));
+        System.out.println(" ");
+
+        //Exemplo 3.3 da página 42
+        NAP aap3 = new NAP();
+        System.out.println("Exemplo 3.3 da página 42");
+        aap3.setµ((float) 0.50);
+        aap3.setµ2((float) 0.50);
+        System.out.println("µ = "+aap3.getµ()+"  µ2 = "+aap3.getµ2()+"  λ = "+aap3.getλ());
+        System.out.println("Gc = "+aap3.getGc()+"  Gct= "+aap3.getGct());
+        System.out.println("Sd = "+aap3.getEL()+" -> Saida Discreta do estado lógico");
+        System.out.println("φ= "+aap3.getφ()+"   GcmaxV= "+aap3.getGcmaxV()+"  GcmaxF= "+aap3.getGcmaxF());
+        System.out.println("Dest= "+aap3.getDest()+"   Gcacresc= "+aap3.getGcacresc()+"  GCest= "+aap3.getGcest());
+        System.out.println("µf= "+aap3.getµf()+"  λf= "+aap3.getλf());
+        System.out.println("D= "+aap3.getD()+" GCr= "+aap3.getGCR());
+        System.out.println("Gct Recup= "+aap3.getIFBGctDeφ(aap3.getφ())+" Gc Recup= "+aap3.getIFBGcDeGCR(aap3.getGCR()));
+        System.out.println("µ1 Recup= "+aap3.getIFBµDeGc(aap3.getGc(),aap3.getGct())+" λ Recup= "+aap3.getIFBλDeGc(aap3.getGc(),aap3.getGct()));
+        System.out.println(" ");
+
+        //Exemplo 3.4 da página 46
+        NAP aap4 = new NAP();
+        System.out.println("Exemplo 3.4 da página 46");
+        aap4.setµ((float) 0.85);
+        aap4.setµ2((float) 0.45);
+        System.out.println("µ = "+aap4.getµ()+"  µ2 = "+aap4.getµ2()+"  λ = "+aap4.getλ());
+        System.out.println("Gc = "+aap4.getGc()+"  Gct= "+aap4.getGct());
+        System.out.println("Sd = "+aap4.getEL()+" -> Saida Discreta do estado lógico");
+        System.out.println("φ= "+aap4.getφ()+"   GcmaxV= "+aap4.getGcmaxV()+"  GcmaxF= "+aap4.getGcmaxF());
+        System.out.println("Gcacresc= "+aap4.getGcacresc()+"  GCest= "+aap4.getGcest()+"  Dest= "+aap4.getDest());
+        System.out.println("µf= "+aap4.getµf()+"  λf= "+aap4.getλf());
+        System.out.println("D= "+aap4.getD()+" GCR= "+aap4.getGCR());
+        System.out.println("Gct Recup= "+aap4.getIFBGctDeφ(aap4.getφ())+" Gc Recup= "+aap4.getIFBGcDeGCR(aap4.getGCR()));
+        System.out.println("µ1 Recup= "+aap4.getIFBµDeGc(aap4.getGc(),aap4.getGct())+" λ Recup= "+aap4.getIFBλDeGc(aap4.getGc(),aap4.getGct()));
+        System.out.println(" ");
+        
+        //Exemplo 3.5 da página 49
+        System.out.println("Exemplo 3.5 da página 49");
+        NAP aap5 = new NAP();
+        aap5.setµ((float) 0.75);
+        aap5.setµ2((float) 0.35);
+        System.out.println("µ = "+aap5.getµ()+"  µ2 = "+aap5.getµ2()+"  λ = "+aap5.getλ());
+        System.out.println("Gc = "+aap5.getGc()+"  Gct= "+aap5.getGct());
+        System.out.println("Sd = "+aap5.getEL()+" -> Saida Discreta do estado lógico");
+        System.out.println("φ= "+aap5.getφ()+"   GcmaxV= "+aap5.getGcmaxV()+"  GcmaxF= "+aap5.getGcmaxF());
+        System.out.println("Gcacresc= "+aap5.getGcacresc()+"  GCest= "+aap5.getGcest()+"  Dest= "+aap5.getDest());
+        System.out.println("µf= "+aap5.getµf()+"  λf= "+aap5.getλf());
+        System.out.println("D= "+aap5.getD()+" GCR= "+aap5.getGCR());
+        System.out.println("Gct Recup= "+aap5.getIFBGctDeφ(aap5.getφ())+" Gc Recup= "+aap5.getIFBGcDeGCR(aap5.getGCR()));
+        System.out.println("µ1 Recup= "+aap5.getIFBµDeGc(aap5.getGc(),aap5.getGct())+" λ Recup= "+aap5.getIFBλDeGc(aap5.getGc(),aap5.getGct()));
+        System.out.println(" ");
+
+        //Exemplo 3.6 da página 50
+        System.out.println("Exemplo 3.6 da página 50");
+        NAP aap6 = new NAP();
+        aap6.setµ((float) 0.80);
+        aap6.setµ2((float) 0.90);
+        System.out.println("µ = "+aap6.getµ()+"  µ2 = "+aap6.getµ2()+"  λ = "+aap6.getλ());
+        System.out.println("Gc = "+aap6.getGc()+"  Gct= "+aap6.getGct());
+        System.out.println("Sd = "+aap6.getEL()+" -> Saida Discreta do estado lógico");
+        System.out.println("φ= "+aap6.getφ()+"   GcmaxV= "+aap6.getGcmaxV()+"  GcmaxF= "+aap6.getGcmaxF());
+        System.out.println("Gcacresc= "+aap6.getGcacresc()+"  GCest= "+aap6.getGcest()+"  GCest= "+aap6.getDest());
+        System.out.println("µf= "+aap6.getµf()+"  λf= "+aap6.getλf());
+        System.out.println("D= "+aap6.getD()+" GCR= "+aap6.getGCR());
+        System.out.println("Gct Recup= "+aap6.getIFBGctDeφ(aap6.getφ())+" Gc Recup= "+aap6.getIFBGcDeGCR(aap6.getGCR()));
+        System.out.println("µ1 Recup= "+aap6.getIFBµDeGc(aap6.getGc(),aap6.getGct())+" λ Recup= "+aap6.getIFBλDeGc(aap6.getGc(),aap6.getGct()));
+        System.out.println(" ");
+        
+        //Exemplo 3.7 da página 52
+        System.out.println("Exemplo 3.7 da página 52");
+        NAP aap7 = new NAP();
+        aap7.setµ((float) 0.40);
+        aap7.setµ2((float) 0.30);
+        System.out.println("µ = "+aap7.getµ()+"  µ2 = "+aap7.getµ2()+"  λ = "+aap7.getλ());
+        System.out.println("Gc = "+aap7.getGc()+"  Gct= "+aap7.getGct());
+        System.out.println("Sd = "+aap7.getEL()+" -> Saida Discreta do estado lógico");
+        System.out.println("φ= "+aap7.getφ()+"   GcmaxV= "+aap7.getGcmaxV()+"  GcmaxF= "+aap7.getGcmaxF());
+        System.out.println("Gcacresc= "+aap7.getGcacresc()+"  GCest= "+aap7.getGcest()+"  Dest= "+aap7.getDest());
+        System.out.println("µf= "+aap7.getµf()+"  λf= "+aap7.getλf());
+        System.out.println("D= "+aap7.getD()+" GCR= "+aap7.getGCR());
+        System.out.println("Gct Recup= "+aap7.getIFBGctDeφ(aap7.getφ())+" Gc Recup= "+aap7.getIFBGcDeGCR(aap7.getGCR()));
+        System.out.println("µ1 Recup= "+aap7.getIFBµDeGc(aap7.getGc(),aap7.getGct())+" λ Recup= "+aap7.getIFBλDeGc(aap7.getGc(),aap7.getGct()));
+        System.out.println(" ");
+        
+        //Exemplo 3.8 da página 54
+        System.out.println("Exemplo 3.8 da página 54");
+        NAP aap8 = new NAP();
+        aap8.setµ((float) 0.25);
+        aap8.setµ2((float) 0.35);
+        System.out.println("µ = "+aap8.getµ()+"  µ2 = "+aap8.getµ2()+"  λ = "+aap8.getλ());
+        System.out.println("Gc = "+aap8.getGc()+"  Gct= "+aap8.getGct());
+        System.out.println("Sd = "+aap8.getEL()+" -> Saida Discreta do estado lógico");
+        System.out.println("φ= "+aap8.getφ()+"   GcmaxV= "+aap8.getGcmaxV()+"  GcmaxF= "+aap8.getGcmaxF());
+        System.out.println("Gcacresc= "+aap8.getGcacresc()+"  GCest= "+aap8.getGcest()+"  Dest= "+aap8.getGcest());
+        System.out.println("µf= "+aap8.getµf()+"  λf= "+aap8.getλf());
+        System.out.println("D= "+aap8.getD()+" GCR= "+aap8.getGCR());
+        System.out.println("Gct Recup= "+aap8.getIFBGctDeφ(aap8.getφ())+" Gc Recup= "+aap8.getIFBGcDeGCR(aap8.getGCR()));
+        System.out.println("µ1 Recup= "+aap8.getIFBµDeGc(aap8.getGc(),aap8.getGct())+" λ Recup= "+aap8.getIFBλDeGc(aap8.getGc(),aap8.getGct()));
+        System.out.println(" ");
+        
+        //Exemplo 3.9 da página 56
+        System.out.println("Exemplo 3.9 da página 56");
+        NAP aap9 = new NAP();
+        aap9.setµ((float) 0.86);
+        aap9.setµ2((float) 0.72);
+        System.out.println("µ = "+aap9.getµ()+"  µ2 = "+aap9.getµ2()+"  λ = "+aap9.getλ());
+        System.out.println("Gc = "+aap9.getGc()+"  Gct= "+aap9.getGct());
+        System.out.println("Sd = "+aap9.getEL()+" -> Saida Discreta do estado lógico");
+        System.out.println("φ= "+aap9.getφ()+"   GcmaxV= "+aap9.getGcmaxV()+"  GcmaxF= "+aap9.getGcmaxF());
+        System.out.println("Gcacresc= "+aap9.getGcacresc()+"  GCest= "+aap9.getGcest()+"  Dest= "+aap9.getDest());
+        System.out.println("µf= "+aap9.getµf()+"  λf= "+aap9.getλf());
+        System.out.println("D= "+aap9.getD()+" GCR= "+aap9.getGCR());
+        System.out.println("Gct Recup= "+aap9.getIFBGctDeφ(aap9.getφ())+" Gc Recup= "+aap9.getIFBGcDeGCR(aap9.getGCR()));
+        System.out.println("µ1 Recup= "+aap9.getIFBµDeGc(aap9.getGc(),aap9.getGct())+" λ Recup= "+aap9.getIFBλDeGc(aap9.getGc(),aap9.getGct()));
+        System.out.println(" ");
+
+        //Exemplo 3.10 da página 57
+        System.out.println("Exemplo 3.10 da página 57");
+        NAP aap10 = new NAP();
+        aap10.setµ((float) 0.18);
+        aap10.setµ2((float) 0.36);
+        System.out.println("µ = "+aap10.getµ()+"  µ2 = "+aap10.getµ2()+"  λ = "+aap10.getλ());
+        System.out.println("Gc = "+aap10.getGc()+"  Gct= "+aap10.getGct());
+        System.out.println("Sd = "+aap10.getEL()+" -> Saida Discreta do estado lógico");
+        System.out.println("φ= "+aap10.getφ()+"   GcmaxV= "+aap10.getGcmaxV()+"  GcmaxF= "+aap10.getGcmaxF());
+        System.out.println("Gcacresc= "+aap10.getGcacresc()+"  GCest= "+aap10.getGcest()+"  Dest= "+aap10.getDest());
+        System.out.println("µf= "+aap10.getµf()+"  λf= "+aap10.getλf());
+        System.out.println("D= "+aap10.getD()+" GCR= "+aap10.getGCR());
+        System.out.println("Gct Recup= "+aap10.getIFBGctDeφ(aap10.getφ())+" Gc Recup= "+aap10.getIFBGcDeGCR(aap10.getGCR()));
+        System.out.println("µ1 Recup= "+aap10.getIFBµDeGc(aap10.getGc(),aap10.getGct())+" λ Recup= "+aap10.getIFBλDeGc(aap10.getGc(),aap10.getGct()));
+        System.out.println(" ");
+
+        //Exemplo 3.13 da página 61
+        System.out.println("Exemplo 3.11 , 3.12 e 3.13 da página 61");
+        NAP aap11 = new NAP();
+        aap11.setµ((float) 0.92);
+        aap11.setµ2((float) 0.79);
+        System.out.println("µ = "+aap11.getµ()+"  µ2 = "+aap11.getµ2()+"  λ = "+aap11.getλ());
+        System.out.println("Gc = "+aap11.getGc()+"  Gct= "+aap11.getGct());
+        System.out.println("Sd = "+aap11.getEL()+" -> Saida Discreta do estado lógico");
+        System.out.println("φ= "+aap11.getφ()+"   GcmaxV= "+aap11.getGcmaxV()+"  GcmaxF= "+aap11.getGcmaxF());
+        System.out.println("Gcacresc= "+aap11.getGcacresc()+"  GCest= "+aap11.getGcest()+"  Dest= "+aap11.getDest());
+        System.out.println("µf= "+aap11.getµf()+"  λf= "+aap11.getλf());
+        System.out.println("D= "+aap11.getD()+" GCR= "+aap11.getGCR());
+        System.out.println("Gct Recup= "+aap11.getIFBGctDeφ(aap11.getφ())+" Gc Recup= "+aap11.getIFBGcDeGCR(aap11.getGCR()));
+        System.out.println("µ1 Recup= "+aap11.getIFBµDeGc(aap11.getGc(),aap11.getGct())+" λ Recup= "+aap11.getIFBλDeGc(aap11.getGc(),aap11.getGct()));
+        System.out.println(" ");
+
+        // Exemplos que utilizam nós de análise paraconsistente NAP
+        // Exemplo 4.1 da página 72 
+        System.out.println("Exemplo 4.1 da página 72");
+        NAP nap1 = new NAP();
+        nap1.setP((String)"Proposicao1");
+        nap1.setµ((float) 0.79);
+        nap1.setµ2((float) 0.72);
+        System.out.println("µ = "+nap1.getµ()+"  µ2 = "+nap1.getµ2()+"  λ = "+nap1.getλ());
+        System.out.println("Gc = "+nap1.getGc()+"  Gct= "+nap1.getGct());
+        System.out.println("Sd = "+nap1.getEL()+" -> Saida Discreta do estado lógico");
+        System.out.println("φ= "+nap1.getφ()+"   GcmaxV= "+nap1.getGcmaxV()+"  GcmaxF= "+nap1.getGcmaxF());
+        System.out.println("Gcacresc= "+nap1.getGcacresc()+"  GCest= "+nap1.getGcest()+"  Dest= "+nap1.getDest());
+        System.out.println("D= "+nap1.getD()+" GCR= "+nap1.getGCR());
+        System.out.println("µf= "+nap1.getµf()+"  λf= "+nap1.getλf());
+        System.out.println("µE= "+nap1.getµE()+"  µER= "+nap1.getµER());
+        System.out.println(" ");
+        
+        //Exemplo 4.2 da página 73
+        System.out.println("Exemplo 4.2 da página 73");
+        NAP nap2 = new NAP();
+        nap2.setP((String)"Proposicao2");
+        nap2.setµ((float)0.37);
+        nap2.setµ2((float)0.22);
+        System.out.println("µ = "+nap2.getµ()+"  µ2 = "+nap2.getµ2()+"  λ = "+nap2.getλ());
+        System.out.println("Gc = "+nap2.getGc()+"  Gct= "+nap2.getGct());
+        System.out.println("Sd = "+nap2.getEL()+" -> Saida Discreta do estado lógico");
+        System.out.println("φ= "+nap2.getφ()+"   GcmaxV= "+nap2.getGcmaxV()+"  GcmaxF= "+nap2.getGcmaxF());
+        System.out.println("Gcacresc= "+nap2.getGcacresc()+"  GCest= "+nap2.getGcest()+"  Dest= "+nap2.getDest());
+        System.out.println("D= "+nap2.getD()+"   GCR= "+nap2.getGCR());
+        System.out.println("µf= "+nap2.getµf()+"  λf= "+nap2.getλf());
+        System.out.println("µE= "+nap2.getµE()+"  µER= "+nap2.getµER()+"  µctr= "+nap2.getµctr());
+        System.out.println(" ");
+
+        //Exemplo 4.3 da página 74
+        System.out.println("Exemplo 4.3 da página 74");
+        NAP nap4 = new NAP();
+        nap4.setP((String)"Proposicao4");
+        nap4.setµ((float)0.79);
+        nap4.setµ2((float)0.64);
+        System.out.println("µ = "+nap4.getµ()+"  µ2 = "+nap4.getµ2()+"  λ = "+nap4.getλ());
+        System.out.println("Gc = "+nap4.getGc()+"  Gct= "+nap4.getGct());
+        System.out.println("Sd = "+nap4.getEL()+" -> Saida Discreta do estado lógico");
+        System.out.println("φ= "+nap4.getφ()+"   GcmaxV= "+nap4.getGcmaxV()+"  GcmaxF= "+nap4.getGcmaxF());
+        System.out.println("Gcacresc= "+nap4.getGcacresc()+"  GCest= "+nap4.getGcest()+"  Dest= "+nap4.getDest());
+        System.out.println("D= "+nap4.getD()+"   GCR= "+nap4.getGCR());
+        System.out.println("µf= "+nap4.getµf()+"  λf= "+nap4.getλf());
+        System.out.println("µE= "+nap4.getµE()+"  µER= "+nap4.getµER()+"  µctr= "+nap4.getµctr());
+        System.out.println(" ");
+        
+        //Exemplo 4.4 da página 78
+        System.out.println("Exemplo 4.4 da página 78");
+        NAP nap5 = new NAP();
+        nap5.setP((String)"Proposicao5");
+        nap5.setµ((float)0.92);
+        nap5.setµ2((float)0.54);
+        System.out.println("µ = "+nap5.getµ()+"  µ2 = "+nap5.getµ2()+"  λ = "+nap5.getλ());
+        System.out.println("Gc = "+nap5.getGc()+"  Gct= "+nap5.getGct());
+        System.out.println("Sd = "+nap5.getEL()+" -> Saida Discreta do estado lógico");
+        System.out.println("φ= "+nap5.getφ()+"   GcmaxV= "+nap5.getGcmaxV()+"  GcmaxF= "+nap5.getGcmaxF());
+        System.out.println("Gcacresc= "+nap5.getGcacresc()+"  GCest= "+nap5.getGcest()+"  Dest= "+nap5.getDest());
+        System.out.println("D= "+nap5.getD()+"   GCR= "+nap5.getGCR());
+        System.out.println("µf= "+nap5.getµf()+"  λf= "+nap5.getλf());
+        System.out.println("µE= "+nap5.getµE()+"  µER= "+nap5.getµER()+"  µctr= "+nap5.getµctr());
+        System.out.println("φE= "+nap5.getφE()+"   µEmaxV= "+nap5.getµEmaxV()+"  µEmaxF= "+nap5.getµEmaxF());
+        System.out.println("µctr Recuperado de φE= "+nap5.getµctrDeφE());
+        System.out.println(" ");
+        
+        //Exemplo 4.5 da página 79
+        System.out.println("Exemplo 4.5 da página 79");
+        NAP nap6 = new NAP();
+        nap6.setP((String)"Proposicao6");
+        nap6.setµ((float)0.88);
+        nap6.setµ2((float)0.13);
+        System.out.println("µ = "+nap6.getµ()+"  µ2 = "+nap6.getµ2()+"  λ = "+nap6.getλ());
+        System.out.println("Gc = "+nap6.getGc()+"  Gct= "+nap6.getGct());
+        System.out.println("Sd = "+nap6.getEL()+" -> Saida Discreta do estado lógico");
+        System.out.println("φ= "+nap6.getφ()+"   GcmaxV= "+nap6.getGcmaxV()+"  GcmaxF= "+nap6.getGcmaxF());
+        System.out.println("Gcacresc= "+nap6.getGcacresc()+"  GCest= "+nap6.getGcest()+"  Dest= "+nap6.getDest());
+        System.out.println("D= "+nap6.getD()+"   GCR= "+nap6.getGCR());
+        System.out.println("µf= "+nap6.getµf()+"  λf= "+nap6.getλf());
+        System.out.println("µE= "+nap6.getµE()+"  µER= "+nap6.getµER()+"  µctr= "+nap6.getµctr());
+        System.out.println("φE= "+nap6.getφ()+"   µEmaxV= "+nap6.getµEmaxV()+"  µEmaxF= "+nap6.getµEmaxF());
+        System.out.println(" ");
+        
+  
+        // Exemplos de modelagem de sinais de entrada do mundo real para extração dos graus de evidência
+        System.out.println("Exemplos de Modelagem de graus de evidências favoráveis ");
+        System.out.println(" ");
+
+        // Exemplo 5.4 da página 90 
+        System.out.println("Exemplo 5.4 da página 90 - PAS");
+        Modeler mod1 = new Modeler();
+        mod1.setModelerName((String)"Modelador Pressão Arterial Sistólica - PAS 1");
+        mod1.setA1((float)120);
+        mod1.setA2((float)150);
+        mod1.setx((float)135);
+        System.out.println("Modeler ID   = "+mod1.getModelerID());
+        System.out.println("Modeler Name = "+mod1.getModelerName());
+        System.out.println("a1 = "+mod1.getA1()+"   a2 = "+mod1.getA2()+"   x = "+mod1.getx());
+        System.out.println("µ com variação não linear = "+mod1.getModNoLinearCres());        
+        System.out.println("µ com variação linear     = "+mod1.getModLinearCres());        
+        System.out.println(" ");
+
+        System.out.println("Exemplo 5.4 da página 90 - PAD");
+        Modeler mod2 = new Modeler();
+        mod2.setModelerName((String)"Modelador Pressão Arterial Diastólica - PAD 1");
+        mod2.setA1((float)90);
+        mod2.setA2((float)100);
+        mod2.setx((float)95);
+        System.out.println("Modeler ID   = "+mod2.getModelerID());
+        System.out.println("Modeler Name = "+mod2.getModelerName());
+        System.out.println("a1 = "+mod2.getA1()+"   a2 = "+mod2.getA2()+"   x = "+mod2.getx());
+        System.out.println("µ com variação não linear = "+mod2.getModNoLinearCres());        
+        System.out.println("µ com variação linear     = "+mod2.getModLinearCres());        
+        System.out.println(" ");
+
+        // Exemplo 5.5 da página 91 
+        System.out.println("Exemplo 5.5 da página 91 - PAS 2");
+        Modeler mod3 = new Modeler();
+        mod3.setModelerName((String)"Modelador Pressão Arterial Sistólica - PAS 2");
+        mod3.setA1((float)120);
+        mod3.setA2((float)140);
+        mod3.setx((float)138);
+        System.out.println("Modeler ID   = "+mod3.getModelerID());
+        System.out.println("Modeler Name = "+mod3.getModelerName());
+        System.out.println("a1 = "+mod3.getA1()+"   a2 = "+mod3.getA2()+"   x = "+mod3.getx());
+        System.out.println("µ com variação não linear = "+mod3.getModNoLinearCres());        
+        System.out.println("µ com variação linear     = "+mod3.getModLinearCres());        
+        System.out.println(" ");
+
+        // Exemplo 5.5 da página 91 
+        System.out.println("Exemplo 5.5 da página 91 - PAD 2");
+        Modeler mod4 = new Modeler();
+        mod4.setModelerName((String)"Modelador Pressão Arterial Diastólica - PAD 2");
+        mod4.setA1((float)80);
+        mod4.setA2((float)90);
+        mod4.setx((float)82);
+        System.out.println("Modeler ID   = "+mod4.getModelerID());
+        System.out.println("Modeler Name = "+mod4.getModelerName());
+        System.out.println("a1 = "+mod4.getA1()+"   a2 = "+mod4.getA2()+"   x = "+mod4.getx());
+        System.out.println("µ com variação não linear = "+mod4.getModNoLinearCres());        
+        System.out.println("µ com variação linear     = "+mod4.getModLinearCres());        
+        System.out.println(" ");
+        
+        // Exemplo 5.6 da página 92 
+        System.out.println("Exemplo 5.6 da página 92 - PAS 3 - Modelagem Linear Crescente");
+        Modeler mod5 = new Modeler();
+        mod5.setModelerName((String)"Modelador Pressão Arterial Sistólica - PAS 3");
+        mod5.setA1((float)120);
+        mod5.setA2((float)140);
+        mod5.setx((float)135);
+        System.out.println("Modeler ID   = "+mod5.getModelerID());
+        System.out.println("Modeler Name = "+mod5.getModelerName());
+        System.out.println("a1 = "+mod5.getA1()+"   a2 = "+mod5.getA2()+"   x = "+mod5.getx());
+        System.out.println("µ PAS-3 com variação linear     = "+mod5.getModLinearCres());        
+        System.out.println(" ");
+
+        // Exemplo 5.6 da página 92 
+        System.out.println("Exemplo 5.6 da página 92 - PAD 3 - Modelagem Linear Crescente");
+        Modeler mod6 = new Modeler();
+        mod6.setModelerName((String)"Modelador Pressão Arterial Diastólica - PAD 3");
+        mod6.setA1((float)80);
+        mod6.setA2((float)90);
+        mod6.setx((float)87);
+        System.out.println("Modeler ID   = "+mod6.getModelerID());
+        System.out.println("Modeler Name = "+mod6.getModelerName());
+        System.out.println("a1 = "+mod6.getA1()+"   a2 = "+mod6.getA2()+"   x = "+mod6.getx());
+        System.out.println("µ PAD-3 com variação linear     = "+mod6.getModLinearCres());        
+        System.out.println(" ");
+        
+        // Exemplo 5.8 da página 93 
+        System.out.println("Exemplo 5.8 da página 93 - Modelagem Linear Crescente");
+        Modeler mod7 = new Modeler();
+        mod7.setModelerName((String)"Modelador Índice de Massa Corpórea (IMC)");
+        mod7.setA1((float)25);
+        mod7.setA2((float)40);
+        mod7.setx((float)37);
+        System.out.println("Modeler ID   = "+mod7.getModelerID());
+        System.out.println("Modeler Name = "+mod7.getModelerName());
+        System.out.println("a1 = "+mod7.getA1()+"   a2 = "+mod7.getA2()+"   x = "+mod7.getx());
+        System.out.println("µ imc     = "+mod7.getModLinearCres());        
+        System.out.println(" ");
+
+        // Exemplo 5.10 da página 94 
+        System.out.println("Exemplo 5.10 da página 94 - Modelagem Linear Decrescente");
+        Modeler mod8 = new Modeler();
+        mod8.setModelerName((String)"Modelador Índice de Massa Corpórea (IMC) - µ2 imc");
+        mod8.setA1((float)25);
+        mod8.setA2((float)40);
+        mod8.setx((float)37);
+        System.out.println("Modeler ID   = "+mod8.getModelerID());
+        System.out.println("Modeler Name = "+mod8.getModelerName());
+        System.out.println("a1 = "+mod8.getA1()+"   a2 = "+mod8.getA2()+"   x = "+mod8.getx());
+        System.out.println("µ2 imc         = "+mod8.getModLinearDeCres());        
+        System.out.println("λ = 1 - µ2 imc = 0.8");
+        System.out.println(" ");
+
+        // Exemplo 5.11 da página 95 
+        System.out.println("Exemplo 5.11 da página 95 - Modelagem Linear com Duas Entradas e análise do NAP");
+        Modeler mod9 = new Modeler();
+        mod9.setModelerName((String)"Modelador Linear Crescente");
+        mod9.setModelerName((String)"Índice de Massa Corpórea (IMC) - µ imc");
+        mod9.setA1((float)25);
+        mod9.setA2((float)40);
+        mod9.setx((float)36.7);
+        System.out.println("Modeler ID   = "+mod9.getModelerID());
+        System.out.println("Modeler Name = "+mod9.getModelerName());
+        System.out.println("a1 = "+mod9.getA1()+"   a2 = "+mod9.getA2()+"   x = "+mod9.getx());
+        System.out.println("µ imc = "+mod9.getModLinearCres());        
+        System.out.println(" ");
+        Modeler mod10 = new Modeler();
+        mod9.setModelerName((String)"Modelador Linear Decrescente");
+        mod10.setModelerName((String)"Índice de Massa Corpórea (IMC) - µ2 imc");
+        mod10.setA1((float)25);
+        mod10.setA2((float)40);
+        mod10.setx((float)33.9);
+        System.out.println("Modeler ID   = "+mod10.getModelerID());
+        System.out.println("Modeler Name = "+mod10.getModelerName());
+        System.out.println("a1 = "+mod10.getA1()+"   a2 = "+mod10.getA2()+"   x = "+mod10.getx());
+        System.out.println("µ2 imc = "+mod10.getModLinearCres());        
+        System.out.println(" ");
+ 
+        NAP nap7 = new NAP();
+        nap7.setP((String)"Proposicao 7  - Indice de Massa Corpórea - IMC");
+        nap7.setµ((float)mod9.getModLinearCres());
+        nap7.setµ2((float)mod10.getModLinearCres());
+        System.out.println("µ = "+nap7.getµ()+"  µ2 = "+nap7.getµ2()+"  λ = "+nap7.getλ());
+        System.out.println("Gc = "+nap7.getGc()+"  Gct= "+nap7.getGct());
+        System.out.println("Sd = "+nap7.getEL()+" -> Saida Discreta do estado lógico");
+        System.out.println("φ= "+nap7.getφ()+"   GcmaxV= "+nap7.getGcmaxV()+"  GcmaxF= "+nap7.getGcmaxF());
+        System.out.println("D= "+nap7.getD()+"   GCR= "+nap7.getGCR()+"   Gcacresc= "+nap7.getGcacresc()+"  GCest= "+nap7.getGcest());
+        System.out.println("µf= "+nap7.getµf()+"  λf= "+nap7.getλf());
+        System.out.println("µE= "+nap7.getµE()+"  µER= "+nap7.getµER()+"  µctr= "+nap7.getµctr());
+        System.out.println("φE= "+nap7.getφ()+"   µEmaxV= "+nap7.getµEmaxV()+"  µEmaxF= "+nap7.getµEmaxF());
+        System.out.println(" ");
+
+        // Exemplo 5.12 da página 95 
+        System.out.println("Exemplo 5.11 da página 95 - Modelagem Linear com Duas Entradas e análise do NAP");
+        Modeler mod11 = new Modeler();
+        mod11.setModelerName((String)"Modelador Linear Crescente");
+        mod11.setModelerName((String)"Índice de Massa Corpórea (IMC) - µ imc");
+        mod11.setA1((float)25);
+        mod11.setA2((float)40);
+        mod11.setx((float)35.3);
+        System.out.println("Modeler ID   = "+mod11.getModelerID());
+        System.out.println("Modeler Name = "+mod11.getModelerName());
+        System.out.println("a1 = "+mod11.getA1()+"   a2 = "+mod11.getA2()+"   x = "+mod11.getx());
+        System.out.println("µ imc = "+mod11.getModLinearCres());        
+        System.out.println(" ");
+
+        Modeler mod12 = new Modeler();
+        mod12.setModelerName((String)"Modelador Não Linear Crescente");
+        mod12.setModelerName((String)"Índice de Massa Corpórea (IMC) - µ2 imc");
+        mod12.setA1((float)20);
+        mod12.setA2((float)40);
+        mod12.setx((float)35.3);
+        System.out.println("Modeler ID   = "+mod12.getModelerID());
+        System.out.println("Modeler Name = "+mod12.getModelerName());
+        System.out.println("a1 = "+mod12.getA1()+"   a2 = "+mod12.getA2()+"   x = "+mod12.getx());
+        System.out.println("µ2 imc = "+mod12.getModNoLinearCres());        
+        System.out.println(" ");
+        
+        // Teste para Instanciar Nó a partir de evidências MOdeladas do Mundo Real
+        NAP nap8 = new NAP();
+        nap8.setP((String)"Proposicao 8  - Indice de Massa Corpórea - IMC 2");
+        nap8.setµ((float)mod11.getModLinearCres());
+        nap8.setµ2((float)mod12.getModNoLinearCres());
+        System.out.println("µ = "+nap8.getµ()+"  µ2 = "+nap8.getµ2()+"  λ = "+nap8.getλ());
+        System.out.println("Gc = "+nap8.getGc()+"  Gct= "+nap8.getGct());
+        System.out.println("Sd = "+nap8.getEL()+" -> Saida Discreta do estado lógico");
+        System.out.println("φ= "+nap8.getφ()+"   GcmaxV= "+nap8.getGcmaxV()+"  GcmaxF= "+nap8.getGcmaxF());
+        System.out.println("D= "+nap8.getD()+"   GCR= "+nap8.getGCR()+"   Gcacresc= "+nap8.getGcacresc()+"  GCest= "+nap8.getGcest());
+        System.out.println("µf= "+nap8.getµf()+"  λf= "+nap8.getλf());
+        System.out.println("µE= "+nap8.getµE()+"  µER= "+nap8.getµER()+"  µctr= "+nap8.getµctr());
+        System.out.println("φE= "+nap8.getφ()+"   µEmaxV= "+nap8.getµEmaxV()+"  µEmaxF= "+nap8.getµEmaxF());
+        System.out.println(" ");
+
+        //Teste básico RAP - 
+        System.out.println("Teste Básico RAP - Exemplo XX da página XX");
+        RAPdataStruct rap1 = new RAPdataStruct();
+        NAP nap9 = new NAP();
+        nap9.setP((String)"Proposicao 8 - Primeiro Teste da RAP");
+        nap9.setµ(nap1.getµER());
+        nap9.setµ2(nap2.getµER());
+        System.out.println("µ = "+nap9.getµ()+"  µ2 = "+nap9.getµ2()+"  λ = "+nap9.getλ());
+        System.out.println("Gc = "+nap9.getGc()+"  Gct= "+nap9.getGct());
+        System.out.println("Sd = "+nap9.getEL()+" -> Saida Discreta do estado lógico");
+        System.out.println("φ= "+nap9.getφ()+"   GcmaxV= "+nap9.getGcmaxV()+"  GcmaxF= "+nap9.getGcmaxF());
+        System.out.println("D= "+nap9.getD()+"   GCR= "+nap9.getGCR()+"   Gcacresc= "+nap9.getGcacresc()+"  GCest= "+nap9.getGcest());
+        System.out.println("µf= "+nap9.getµf()+"  λf= "+nap9.getλf());
+        System.out.println("µE= "+nap9.getµE()+"  µER= "+nap9.getµER()+"  µctr= "+nap9.getµctr());
+        System.out.println("φE= "+nap9.getφ()+"   µEmaxV= "+nap9.getµEmaxV()+"  µEmaxF= "+nap9.getµEmaxF());        
+        
+        rap1.setNAP(nap9);
+        System.out.println("rap = "+rap1.getNAP());
+        rap1.insertNAP(nap9);
+        rap1.insertNAP(nap1);
+        rap1.insertNAP(nap2);
+        System.out.println("nap   = "+rap1.getNAP());
+        System.out.println("napµ  = "+rap1.getNAPµ());
+        System.out.println("napµ2 = "+rap1.getNAPµ2());
+        //System.out.println("µ1 = "+nap7.getµ((float) nap1.getGCR())+"  µ2 = "+nap7.getµ2((float) nap2.getGCR())+"  λ = "+nap7.getλ());
+        
+        RAPdataStruct rap3 = new RAPdataStruct(nap1,nap2);
+        System.out.println(" ");
+    
+         //Teste básico NAP - Interface CSD
+        System.out.println("Teste Interface CSD - Exemplo 6.1 da página 106");
+        NAP nap10 = new NAP();
+        nap10.setP((String)"Proposicao 10 - Primeiro Teste Interface CSD da RAP");
+        nap10.setµ((float)0.5);
+        nap10.setφEµant((float) 1.00);
+        nap10.setµ2((float)0.28);
+        nap10.setφEλant((float) 0.93);
+        System.out.println("Proposição : "+nap10.getP());
+        System.out.println("µ = "+nap10.getµ()+"  µ2 = "+nap10.getµ2()+"  λ = "+nap10.getλ());
+        System.out.println("Gc = "+nap10.getGc()+"  Gct= "+nap10.getGct());
+        System.out.println("Sd = "+nap10.getEL()+" -> Saida Discreta do estado lógico");
+        System.out.println("φ= "+nap10.getφ()+"   GcmaxV= "+nap10.getGcmaxV()+"  GcmaxF= "+nap10.getGcmaxF());
+        System.out.println("D= "+nap10.getD()+"   GCR= "+nap10.getGCR()+"   Gcacresc= "+nap10.getGcacresc()+"  GCest= "+nap10.getGcest());
+        System.out.println("µf= "+nap10.getµf()+"  λf= "+nap10.getλf());
+        System.out.println("µE= "+nap10.getµE()+"  µER= "+nap10.getµER()+"  µctr= "+nap10.getµctr());
+        System.out.println("φE= "+nap10.getφ()+"   µEmaxV= "+nap10.getµEmaxV()+"  µEmaxF= "+nap10.getµEmaxF());        
+        System.out.println(" ");
+        System.out.println("φEµant = "+nap10.getφEµant()+"   φEλant  = "+nap10.getφEλant());        
+        System.out.println("φE CSD = "+nap10.getICSDφE()+"   µER CSD = "+nap10.getICSDµER());        
+        System.out.println(" ");
+       
+         //Teste básico NAP - Interface CSD
+        System.out.println("Teste Interface CSD - Exemplo 6.2 da página 107");
+        NAP nap11 = new NAP();
+        nap11.setP((String)"Proposicao 11 - Segundo Teste Interface CSD da RAP");
+        nap11.setµ((float)0.77);
+        nap11.setφEµant((float) 0.83);
+        nap11.setµ2((float)0.5);
+        nap11.setφEλant((float) 1.00);
+        System.out.println("Proposição : "+nap11.getP());
+        System.out.println("µ = "+nap11.getµ()+"  µ2 = "+nap11.getµ2()+"  λ = "+nap11.getλ());
+        System.out.println("Gc = "+nap11.getGc()+"  Gct= "+nap11.getGct());
+        System.out.println("Sd = "+nap11.getEL()+" -> Saida Discreta do estado lógico");
+        System.out.println("φ= "+nap11.getφ()+"   GcmaxV= "+nap11.getGcmaxV()+"  GcmaxF= "+nap11.getGcmaxF());
+        System.out.println("D= "+nap11.getD()+"   GCR= "+nap11.getGCR()+"   Gcacresc= "+nap11.getGcacresc()+"  GCest= "+nap11.getGcest());
+        System.out.println("µf= "+nap11.getµf()+"  λf= "+nap11.getλf());
+        System.out.println("µE= "+nap11.getµE()+"  µER= "+nap11.getµER()+"  µctr= "+nap11.getµctr());
+        System.out.println("φE= "+nap11.getφ()+"   µEmaxV= "+nap11.getµEmaxV()+"  µEmaxF= "+nap11.getµEmaxF());        
+        System.out.println(" ");
+        System.out.println("φEµant = "+nap11.getφEµant()+"   φEλant  = "+nap11.getφEλant());        
+        System.out.println("φE CSD = "+nap11.getICSDφE()+"   µER CSD = "+nap11.getICSDµER());        
+        System.out.println(" ");
+        
+         //Teste NAP - Interface CAPφE
+        System.out.println("Teste Interface CAPφE - Exemplo 6.3 da página 116");
+        NAP nap12 = new NAP();
+        nap12.setP((String)"Proposicao 12 - Primeiro Teste Interface CAPφE da RAP");
+        nap12.setµ((float)0.88);
+        nap12.setµ2((float)0.85);
+        nap12.setφEext((float) 0.63);
+        System.out.println("Proposição : "+nap12.getP());
+        System.out.println("µ = "+nap12.getµ()+"  µ2 = "+nap12.getµ2()+"  λ = "+nap12.getλ());
+        System.out.println("Gc = "+nap12.getGc()+"  Gct= "+nap12.getGct());
+        System.out.println("Sd = "+nap12.getEL()+" -> Saida Discreta do estado lógico");
+        System.out.println("φ= "+nap12.getφ()+"   GcmaxV= "+nap12.getGcmaxV()+"  GcmaxF= "+nap12.getGcmaxF());
+        System.out.println("D= "+nap12.getD()+"   GCR= "+nap12.getGCR()+"   Gcacresc= "+nap12.getGcacresc()+"  GCest= "+nap12.getGcest());
+        System.out.println("µf= "+nap12.getµf()+"  λf= "+nap12.getλf());
+        System.out.println("µE= "+nap12.getµE()+"  µER= "+nap12.getµER()+"  µctr= "+nap12.getµctr());
+        System.out.println("φE= "+nap12.getφ()+"   µEmaxV= "+nap12.getµEmaxV()+"  µEmaxF= "+nap12.getµEmaxF());        
+        System.out.println(" ");
+        System.out.println("µE       = "+nap12.getµE()+"   µEmaxV    = "+nap12.getICAPµEmaxV()+"  µEmaxF    = "+nap12.getICAPµEmaxF());        
+        System.out.println("φE CAPφE = "+nap12.getICAPφE()+"    φEs CAPφE = "+nap12.getICAPφEs()+"   µER CAPφE = "+nap12.getICAPµER());        
+        System.out.println("CGc      = "+nap12.getCGc()+"    CGct      = "+nap12.getCGct()+"   CD        = "+nap12.getCD()+"   GCR = "+nap12.getICAPGCR());
+        System.out.println("φEext    = "+nap12.getφEext()+"   μctrext     = "+nap12.getμctrext());
+        System.out.println(" ");
+
+         //Teste NAP - Interface CAPφE
+        System.out.println("Teste Interface CAPφE - Exemplo 6.4 da página 117");
+        NAP nap13 = new NAP();
+        nap13.setP((String)"Proposicao 13 - Segundo Teste Interface CAPφE da RAP");
+        nap13.setµ((float)0.18);
+        nap13.setµ2((float)0.15);
+        nap13.setφEext((float) 0.63);
+        System.out.println("Proposição : "+nap13.getP());
+        System.out.println("µ = "+nap13.getµ()+"  µ2 = "+nap13.getµ2()+"  λ = "+nap13.getλ());
+        System.out.println("Gc = "+nap13.getGc()+"  Gct= "+nap13.getGct());
+        System.out.println("Sd = "+nap13.getEL()+" -> Saida Discreta do estado lógico");
+        System.out.println("φ= "+nap13.getφ()+"   GcmaxV= "+nap13.getGcmaxV()+"  GcmaxF= "+nap13.getGcmaxF());
+        System.out.println("D= "+nap13.getD()+"   GCR= "+nap13.getGCR()+"   Gcacresc= "+nap13.getGcacresc()+"  GCest= "+nap13.getGcest());
+        System.out.println("µf= "+nap13.getµf()+"  λf= "+nap13.getλf());
+        System.out.println("µE= "+nap13.getµE()+"  µER= "+nap13.getµER()+"  µctr= "+nap13.getµctr());
+        System.out.println("φE= "+nap13.getφ()+"   µEmaxV= "+nap13.getµEmaxV()+"  µEmaxF= "+nap13.getµEmaxF());        
+        System.out.println(" ");
+        System.out.println("µE       = "+nap13.getµE()+"   µEmaxV    = "+nap13.getICAPµEmaxV()+"  µEmaxF    = "+nap13.getICAPµEmaxF());        
+        System.out.println("φE CAPφE = "+nap13.getICAPφE()+"    φEs CAPφE = "+nap13.getICAPφEs()+"   µER CAPφE = "+nap13.getICAPµER());        
+        System.out.println("CGc      = "+nap13.getCGc()+"    CGct      = "+nap13.getCGct()+"   CD        = "+nap13.getCD()+"   GCR = "+nap13.getICAPGCR());
+        System.out.println("φEext    = "+nap13.getφEext()+"   μctrext     = "+nap13.getμctrext());
+        System.out.println(" ");
+
+         //Teste NAP - Interface CAPφE
+        System.out.println("Teste Interface CAPµctr - Exemplo 6.5 da página 120");
+        NAP nap14 = new NAP();
+        nap14.setP((String)"Proposicao 14 - Primeiro teste Interface CAPctrext da RAP");
+        nap14.setµ((float)0.92);
+        nap14.setµ2((float)0.63);
+        nap14.setμctrext((float) 0.23);
+        System.out.println("Proposição : "+nap14.getP());
+        System.out.println("µ = "+nap14.getµ()+"  µ2 = "+nap14.getµ2()+"  λ = "+nap14.getλ());
+        System.out.println("Gc = "+nap14.getGc()+"  Gct= "+nap14.getGct());
+        System.out.println("Sd = "+nap14.getEL()+" -> Saida Discreta do estado lógico");
+        System.out.println("φ= "+nap14.getφ()+"   GcmaxV= "+nap14.getGcmaxV()+"  GcmaxF= "+nap14.getGcmaxF());
+        System.out.println("D= "+nap14.getD()+"   GCR= "+nap14.getGCR()+"   Gcacresc= "+nap14.getGcacresc()+"  GCest= "+nap14.getGcest());
+        System.out.println("µf= "+nap14.getµf()+"  λf= "+nap14.getλf());
+        System.out.println("µE= "+nap14.getµE()+"  µER= "+nap14.getµER()+"  µctr= "+nap14.getµctr());
+        System.out.println("φE= "+nap14.getφ()+"   µEmaxV= "+nap14.getµEmaxV()+"  µEmaxF= "+nap14.getµEmaxF());        
+        System.out.println(" ");
+        System.out.println("µE       = "+nap14.getµE()+"   µEmaxV    = "+nap14.getICAPµEmaxV()+"  µEmaxF    = "+nap14.getICAPµEmaxF());        
+        System.out.println("φE CAPφE = "+nap14.getICAPφE()+"    φEs CAPφE = "+nap14.getICAPφEs()+"   µER CAPφE = "+nap14.getICAPµER());        
+        System.out.println("CGc      = "+nap14.getCGc()+"    CGct      = "+nap14.getCGct()+"   CD        = "+nap14.getCD()+"   GCR = "+nap14.getICAPGCR());
+        System.out.println("φEext    = "+nap14.getφEext()+"   μctrext     = "+nap14.getμctrext());
+        System.out.println(" ");
+
+         //Teste NAP - Interface CAPφE
+        System.out.println("Teste Interface CAPµctr - Exemplo 6.6 da página 121");
+        NAP nap15 = new NAP();
+        nap15.setP((String)"Proposicao 15 - Segundo teste Interface CAPµctr da RAP");
+        nap15.setµ((float)0.12);
+        nap15.setµ2((float)0.11);
+        nap15.setμctrext((float) 0.23);
+        System.out.println("Proposição : "+nap15.getP());
+        System.out.println("µ = "+nap15.getµ()+"  µ2 = "+nap15.getµ2()+"  λ = "+nap15.getλ());
+        System.out.println("Gc = "+nap15.getGc()+"  Gct= "+nap15.getGct());
+        System.out.println("Sd = "+nap15.getEL()+" -> Saida Discreta do estado lógico");
+        System.out.println("φ= "+nap15.getφ()+"   GcmaxV= "+nap15.getGcmaxV()+"  GcmaxF= "+nap15.getGcmaxF());
+        System.out.println("D= "+nap15.getD()+"   GCR= "+nap15.getGCR()+"   Gcacresc= "+nap15.getGcacresc()+"  GCest= "+nap15.getGcest());
+        System.out.println("µf= "+nap15.getµf()+"  λf= "+nap15.getλf());
+        System.out.println("µE= "+nap15.getµE()+"  µER= "+nap15.getµER()+"  µctr= "+nap15.getµctr());
+        System.out.println("φE= "+nap15.getφ()+"   µEmaxV= "+nap15.getµEmaxV()+"  µEmaxF= "+nap15.getµEmaxF());        
+        System.out.println(" ");
+        System.out.println("µE       = "+nap15.getµE()+"   µEmaxV    = "+nap15.getICAPµEmaxV()+"  µEmaxF    = "+nap15.getICAPµEmaxF());        
+        System.out.println("φE CAPφE = "+nap15.getICAPφE()+"    φEs CAPφE = "+nap15.getICAPφEs()+"   µER CAPφE = "+nap15.getICAPµER());        
+        System.out.println("CGc      = "+nap15.getCGc()+"    CGct      = "+nap15.getCGct()+"   CD        = "+nap15.getCD()+"   GCR = "+nap15.getICAPGCR());
+        System.out.println("φEext    = "+nap15.getφEext()+"   μctrext     = "+nap15.getμctrext());
+        System.out.println(" ");
+
+
+        /*************************************************************************************************/
+        /*************************************************************************************************/
+        System.out.println("##################################################################################");
+        System.out.println("Simulação do Exemplo Auxilio ao Diagnóstico de Cardiopatias da página 130 a 185");
+        System.out.println(" ");
+        System.out.println("Configuração para Análise de Riscos Contraláveis");
+        System.out.println("Exemplo 7.1 da página 136");
+        System.out.println(" ");
+        
+        // Relação entre Sedentarismo e Tabagismo
+        NAP napCST = new NAP();
+        napCST.setP((String)"Relação entre Sedentarismo e Tabagismo");
+        napCST.setµ((float)0.75);
+        napCST.setµ2((float)0.75);
+        System.out.println("Proposição = "+napCST.getP());
+        System.out.println("µ  = "+napCST.getµ()+"  µ2 = "+napCST.getµ2()+"  λ = "+napCST.getλ());
+        System.out.println("Gc = "+napCST.getGc()+"  Gct= "+napCST.getGct());
+        System.out.println("Saida Discreta do estado lógico (SD)"+napCST.getEL());
+        System.out.println("φ  = "+napCST.getφ()+"  GcmaxV= "+napCST.getGcmaxV()+"  GcmaxF= "+napCST.getGcmaxF());
+        System.out.println("D  = "+napCST.getD()+"  GCR= "+napCST.getGCR()+"  Gcacresc= "+napCST.getGcacresc()+"  GCest= "+napCST.getGcest());
+        System.out.println("µf = "+napCST.getµf()+"  λf= "+napCST.getλf());
+        System.out.println("µE = "+napCST.getµE()+"  µER= "+napCST.getµER()+"  µctr= "+napCST.getµctr());
+        System.out.println("φE = "+napCST.getφE()+"  µEmaxV= "+napCST.getµEmaxV()+"  µEmaxF= "+napCST.getµEmaxF());
+        System.out.println(" ");
+
+        // Relação entre Tabagismo e Índice de Massa Corpórea - IMC
+        NAP napCTI = new NAP();
+        napCTI.setP((String)"Relação entre Tabagismo e Índice de Massa Corpórea - IMC");
+        napCTI.setµ((float)0.75);
+        napCTI.setµ2((float)1.00);
+        System.out.println("Proposição = "+napCTI.getP());
+        System.out.println("µ  = "+napCTI.getµ()+"  µ2 = "+napCTI.getµ2()+"  λ = "+napCTI.getλ());
+        System.out.println("Gc = "+napCTI.getGc()+"  Gct= "+napCTI.getGct());
+        System.out.println("Saida Discreta do estado lógico (SD)"+napCST.getEL());
+        System.out.println("φ  = "+napCTI.getφ()+"  GcmaxV= "+napCTI.getGcmaxV()+"  GcmaxF= "+napCTI.getGcmaxF());
+        System.out.println("D  = "+napCTI.getD()+"  GCR= "+napCTI.getGCR()+"  Gcacresc= "+napCTI.getGcacresc()+"  GCest= "+napCTI.getGcest());
+        System.out.println("µf = "+napCTI.getµf()+"  λf= "+napCTI.getλf());
+        System.out.println("µE = "+napCTI.getµE()+"  µER= "+napCTI.getµER()+"  µctr= "+napCTI.getµctr());
+        System.out.println("φE = "+napCTI.getφE()+"  µEmaxV= "+napCTI.getµEmaxV()+"  µEmaxF= "+napCTI.getµEmaxF());
+        System.out.println(" ");
+
+        // Relação Final entre Sedentarismos, Tabagismo e Índice de Massa Corpórea - IMC
+        NAP napC = new NAP();
+        napC.setP((String)"O paciente pertence ao grupo de risco contralável ?");
+        napC.setµ(napCST.getµER());
+        napC.setµ2(napCTI.getµER());
+        System.out.println("Proposição = "+napC.getP());
+        System.out.println("µ  = "+napC.getµ()+"  µ2 = "+napC.getµ2()+"  λ = "+napC.getλ());
+        System.out.println("Gc = "+napC.getGc()+"  Gct= "+napC.getGct());
+        System.out.println("Saida Discreta do estado lógico (SD)"+napCST.getEL());
+        System.out.println("φ  = "+napC.getφ()+"  GcmaxV= "+napC.getGcmaxV()+"  GcmaxF= "+napC.getGcmaxF());
+        System.out.println("D  = "+napC.getD()+"  GCR= "+napC.getGCR()+"  Gcacresc= "+napC.getGcacresc()+" GCest= "+napC.getGcest());
+        System.out.println("µf = "+napC.getµf()+"  λf= "+napC.getλf());
+        System.out.println("µE = "+napC.getµE()+"  µER= "+napC.getµER()+"  µctr= "+napC.getµctr());
+        System.out.println("φE = "+napC.getφE()+"  µEmaxV= "+napC.getµEmaxV()+"  µEmaxF= "+napC.getµEmaxF());        
+
+
+        System.out.println(" ");
+        System.out.println("Configuração para Análise de Pertencer aos Grupos Riscos ");
+        System.out.println("Exemplo 7.2 da página 142");
+        System.out.println(" ");
+       
+        //Relação entre Risco Controlável e Risco Não Controlável 
+        NAP napCNC = new NAP();
+        napCNC.setP((String)"Relação entre Risco Controlável e Risco Não Controlável ");
+        napCNC.setµ((float)0.88);
+        napCNC.setµ2((float)0.65);
+        System.out.println("Proposição = "+napCNC.getP());
+        System.out.println("µ  = "+napCNC.getµ()+"  µ2 = "+napCNC.getµ2()+"  λ = "+napCNC.getλ());
+        System.out.println("Gc = "+napCNC.getGc()+"  Gct= "+napCNC.getGct());
+        System.out.println("Sd = "+napCNC.getEL()+"  -> Saida Discreta do estado lógico");
+        System.out.println("φ  = "+napCNC.getφ()+"  GcmaxV= "+napCNC.getGcmaxV()+"  GcmaxF= "+napCNC.getGcmaxF());
+        System.out.println("D  = "+napCNC.getD()+"  GCR= "+napCNC.getGCR()+"  Gcacresc= "+napCNC.getGcacresc()+"  GCest= "+napCNC.getGcest());
+        System.out.println("µf = "+napCNC.getµf()+"  λf= "+napCNC.getλf());
+        System.out.println("µE = "+napCNC.getµE()+"  µER= "+napCNC.getµER()+"  µctr= "+napCNC.getµctr());
+        System.out.println("φE = "+napCNC.getφE()+"  µEmaxV= "+napCNC.getµEmaxV()+"  µEmaxF= "+napCNC.getµEmaxF());
+        System.out.println(" ");
+
+        // Relação entre Risco Não Controlável e Risco Sintomático
+        NAP napNCS = new NAP();
+        napNCS.setP((String)"Relação entre Risco Não Controlável e Risco Sintomático ");
+        napNCS.setµ((float)0.65);
+        napNCS.setµ2((float)0.75);
+        System.out.println("Proposição = "+napNCS.getP());
+        System.out.println("µ  = "+napNCS.getµ()+"  µ2 = "+napNCS.getµ2()+"  λ = "+napNCS.getλ());
+        System.out.println("Gc = "+napNCS.getGc()+"  Gct= "+napNCS.getGct());
+        System.out.println("Sd = "+napNCS.getEL()+"  -> Saida Discreta do estado lógico");
+        System.out.println("φ  = "+napNCS.getφ()+"  GcmaxV= "+napNCS.getGcmaxV()+"  GcmaxF= "+napNCS.getGcmaxF());
+        System.out.println("D  = "+napNCS.getD()+"  GCR= "+napNCS.getGCR()+"  Gcacresc= "+napNCS.getGcacresc()+"  GCest= "+napNCS.getGcest());
+        System.out.println("µf = "+napNCS.getµf()+"  λf= "+napNCS.getλf());
+        System.out.println("µE = "+napNCS.getµE()+"  µER= "+napNCS.getµER()+"  µctr= "+napNCS.getµctr());
+        System.out.println("φE = "+napNCS.getφE()+"  µEmaxV= "+napNCS.getµEmaxV()+"  µEmaxF= "+napNCS.getµEmaxF());
+        System.out.println(" ");
+
+        // O paciente pertence aos grupos de risco não controlável ?
+        NAP napGR = new NAP();
+        napGR.setP((String)"O paciente pertence aos grupos de risco ?");
+        napGR.setµ(napCNC.getµER());
+        napGR.setµ2(napNCS.getµER());
+        System.out.println("Proposição = "+napGR.getP());
+        System.out.println("µ  = "+napGR.getµ()+"  µ2 = "+napGR.getµ2()+"  λ = "+napGR.getλ());
+        System.out.println("Gc = "+napGR.getGc()+"  Gct= "+napGR.getGct());
+        System.out.println("φ  = "+napGR.getφ()+"  GCR= "+napGR.getGCR());
+        System.out.println("φE = "+napGR.getφE()+"  µER= "+napGR.getµER()+"  µctr= "+napGR.getµctr());
+        System.out.println(" ");
+        
+        System.out.println("Exemplo 7.3 da página 146");
+        //System.out.println("Unificação de até 5 eviências distintas, sob um único intervalo fechado [0;1]");
+        //System.out.println("Classificação e conversão das evidências de entrada para topologia de Classificação ");
+        System.out.println(" ");
+
+        // Instância Nó Topologia Classificação para C (C) 
+        NAP napC02 = new NAP();
+        napC02.setµ02((float)0.88);
+        System.out.println("Classifição do Risco C no intervalo [0,0 ; 0,2] ");
+        System.out.println("Classificação intervalo Cµ02 = "+napC02.getμ02());
+        System.out.println(" ");
+
+        // Instância Nó Pertinencia NC (PNC)
+        NAP napNC24 = new NAP();
+        napNC24.setµ24((float)0.65);
+        System.out.println("Classifição do Risco NC no intervalo [0,2 ; 0,4] ");
+        System.out.println("Classificação intervalo NCµ24= "+napNC24.getμ24());
+        System.out.println(" ");
+
+        // Instância Nó Pertinencia CNCp
+        NAP napCNCp = new NAP();
+        napCNCp.setP((String)"Grau de Evidência de Pertinência Classificada CNCp ");
+        napCNCp.setµ(napC02.getμ02());
+        napCNCp.setµ2(napNC24.getμ24());
+        System.out.println("Proposição = "+napCNCp.getP());
+        //System.out.println("φ  = "+napCNCp.getφ()+"  GCR= "+napCNCp.getGCR());
+        System.out.println("φE = "+napCNCp.getφE()+"  µER= "+napCNCp.getµER()+"  µctr= "+napCNCp.getµctr());
+        System.out.println(" ");
+        
+        // Instância Nó Pertinencia C+NC
+        NAP napCNC46 = new NAP();
+        napCNC46.setµ46(napCNCp.getµER());
+        System.out.println("Classifição do Risco C+NC no intervalo [0,4 ; 0,6] ");
+        System.out.println("Classificação intervalo CNCµ46= "+napCNC46.getμ46());
+        System.out.println(" ");
+
+        
+        // Instância Nó Pertinencia NC+S
+        NAP napNCS68 = new NAP();
+        napNCS68.setµ68(napNCS.getµER());
+        System.out.println("Classifição do Risco NC+S no intervalo [0,6 ; 0,8] ");
+        System.out.println("Classificação intervalo CNSµ68= "+napNCS68.getμ68());
+        System.out.println(" ");
+        
+        // Instância Nó Pertinencia CNCp
+        NAP napGRp = new NAP();
+        napGRp.setP((String)"Risco GRd : N NC (N+C) S (NC+S)");
+        napGRp.setµ(napCNC46.getμ46());
+        napGRp.setµ2(napNCS68.getμ68());
+        System.out.println("Proposição = "+napGRp.getP());
+        //System.out.println("φ  = "+napGRp.getφ()+"  GCR= "+napGRp.getGCR());
+        System.out.println("φE = "+napGRp.getφE()+"  µER= "+napGRp.getµER()+"  µctr= "+napGRp.getµctr());
+        System.out.println(" ");
+
+        // Instância Nó Pertinencia C, NC, (C+NC), S, (NC+S)
+        NAP napGR81 = new NAP();
+        napGR81.setµ81(napGR.getµER());
+        System.out.println("Classifição do Risco( C NC (NC+S) S (NC+S) no intervalo [0,8 ; 1,0] ");
+        System.out.println("Classificação intervalo GRµ81= "+napGR81.getμ81());
+        System.out.println(" ");
+
+        // Instância Nó Pertinencia GRDC
+        NAP napPGR = new NAP();
+        napPGR.setP((String)"Grau de Evidência de Pertinência a Grupos de Risco ");
+        napPGR.setµ(napGRp.getµER());
+        napPGR.setµ2(napGR81.getμ81());
+        System.out.println("Proposição = "+napPGR.getP());
+        System.out.println("µ  = "+napPGR.getµ()+"  µ2 = "+napPGR.getµ2()+"  λ = "+napPGR.getλ());
+        System.out.println("Gc = "+napPGR.getGc()+"  Gct= "+napPGR.getGct());
+        System.out.println("φ  = "+napPGR.getφ()+"  GCR= "+napPGR.getGCR());
+        System.out.println("φE = "+napPGR.getφE()+"  µER= "+napPGR.getµER()+"  µctr= "+napPGR.getµctr());
+        System.out.println(" ");
+        
+        System.out.println("##########################################################################");
+        System.out.println("Configuração para Análise de Pressão Arterial ");
+        System.out.println(" ");
+        
+        // Exemplo modelagem da página 150 - Pressão Arterial Sistólica PAS
+        Modeler modPAS = new Modeler();
+        Modeler modPASLimite = new Modeler();
+        Modeler modPASLeve = new Modeler();
+        Modeler modPASModerada = new Modeler();
+        Modeler modPASGrave = new Modeler();
+        modPAS.setModelerName((String)"Modelador Pressão Arterial Sistólica - PAS ");
+        modPAS.setA1((float)130);
+        modPAS.setA2((float)190);
+        modPAS.setx((float)166);
+        // OutPuts
+        System.out.println("Modeler ID   = "+modPAS.getModelerID()+"   Modeler Name = "+modPAS.getModelerName());
+        System.out.println("a1 = "+modPAS.getA1()+"   a2 = "+modPAS.getA2()+"   x = "+modPAS.getx());
+        System.out.println("µ Pressão Sistólica  = "+modPAS.getModLinearCres());        
+        System.out.println(" ");
+
+        // Modelador para Pressão Arterial Diastólica
+        Modeler modPAD = new Modeler();
+        Modeler modPADLimite = new Modeler();
+        Modeler modPADLeve = new Modeler();
+        Modeler modPADModerada = new Modeler();
+        Modeler modPADGrave = new Modeler();
+        modPAD.setModelerName((String)"Modelador Pressão Arterial Diastólica - PAD ");
+        modPAD.setA1((float)70);
+        modPAD.setA2((float)120);
+        modPAD.setx((float)104);
+        // OutPuts
+        System.out.println("Modeler ID   = "+modPAD.getModelerID()+"   Modeler Name = "+modPAD.getModelerName());
+        System.out.println("a1 = "+modPAD.getA1()+"   a2 = "+modPAD.getA2()+"   x = "+modPAD.getx());
+        System.out.println("µ Pressão Diastólica  = "+modPAD.getModLinearCres());        
+        System.out.println(" ");
+
+        // variáveis para determinar intervalo de pressão
+        float pas=modPAS.getx();
+        float pad=modPAD.getx();
+        
+        // Carga inicial para modelagem de hipertensão Moderada e Grave
+        modPASModerada.setx(pas);
+        modPADModerada.setx(pad);
+        modPASGrave.setx(pas);
+        modPADGrave.setx(pad);
+        
+        if (pas<=140 && pad<=90 ){
+            modPASLimite.setA1((float)130);
+            modPASLimite.setA2((float)140);
+            modPADLimite.setA1((float)85);
+            modPADLimite.setA2((float)90);
+            modPASLimite.setx(pas);
+            modPADLimite.setx(pad);
+            System.out.println("Pressão PAS  e PAD - Classificado como Abaixo de Limitrofe");
+            System.out.println("PAS a1 = "+modPASLimite.getA1()+"   PAS a2 = "+modPASLimite.getA2()+"   PAS x = "+modPASLimite.getx());
+            System.out.println("µ PAS Limite    = "+modPASLimite.getModLinearCres());        
+            System.out.println("PAD a1 = "+modPADLimite.getA1()+"   PAS a2 = "+modPADLimite.getA2()+"   PAS x = "+modPADLimite.getx());
+            System.out.println("µ PAD Limite    = "+modPADLimite.getModLinearCres());        
+        }
+        else if ((pas>140 && pad>90 )&&(pas<=160 && pad<=100 )){
+                modPASLeve.setA1((float)140);
+                modPASLeve.setA2((float)160);
+                modPADLeve.setA1((float)90);
+                modPADLeve.setA2((float)100);
+                modPASLeve.setx(pas);
+                modPADLeve.setx(pad);
+                System.out.println("Pressão PAS  e PAD - Classificado como Hipertensão LEVE");
+                System.out.println("PAS a1 = "+modPASLeve.getA1()+"   PAS a2 = "+modPASLeve.getA2()+"   PAS x = "+modPASLeve.getx());
+                System.out.println("µ PAS Leve    = "+modPASLeve.getModLinearCres());        
+                System.out.println("PAD a1 = "+modPADLeve.getA1()+"   PAS a2 = "+modPADLeve.getA2()+"   PAS x = "+modPADLeve.getx());
+                System.out.println("µ PAD Leve    = "+modPADLeve.getModLinearCres());        
+        }  if ((pas>160 && pad>100 )&&(pas<=170 && pad<=105 )){
+                modPASModerada.setA1((float)150);
+                modPASModerada.setA2((float)170);
+                modPADModerada.setA1((float)95);
+                modPADModerada.setA2((float)105);
+                modPASModerada.setx(pas);
+                modPADModerada.setx(pad);
+                System.out.println("Pressão PAS  e PAD - Classificado como Hipertensão MODERADA");
+                System.out.println("PAS a1 = "+modPASModerada.getA1()+"   PAS a2 = "+modPASModerada.getA2()+"   PAS x = "+modPASModerada.getx());
+                System.out.println("µ PAS Moderada    = "+modPASModerada.getModLinearCres());        
+                System.out.println("PAD a1 = "+modPADModerada.getA1()+"   PAD a2 = "+modPADModerada.getA2()+"   PAD x = "+modPADModerada.getx());
+                System.out.println("µ PAD Moderada    = "+modPADModerada.getModLinearCresMin5());        
+        }   if ((pas>170 && pad>105 )&&(pas<=180 && pad<=110 )){
+                modPASGrave.setA1((float)160);
+                modPASGrave.setA2((float)180);
+                modPADGrave.setA1((float)100);
+                modPADGrave.setA2((float)110);
+                modPASGrave.setx(pas);
+                modPADGrave.setx(pad);
+                System.out.println("Pressão PAS  e PAD - Classificado como Hipertensão GRAVE");
+                System.out.println("PAS a1 = "+modPASGrave.getA1()+"   PAS a2 = "+modPASGrave.getA2()+"   PAS x = "+modPASGrave.getx());
+                System.out.println("µ PAS Grave    = "+modPASGrave.getModLinearCres());        
+                System.out.println("PAD a1 = "+modPADGrave.getA1()+"   PAS a2 = "+modPADGrave.getA2()+"   PAS x = "+modPADGrave.getx());
+                System.out.println("µ PAD Grave    = "+modPADGrave.getModLinearCresMin5());        
+        }
+        System.out.println(" ");
+
+            //Relação entre PAS Limite e PAS Leve - PASLL
+            NAP napPASLL = new NAP();
+            napPASLL.setP((String)"Relação entre Pressão Arterial Sistólica - PAS Limite x Leve");
+            napPASLL.setµ((float)modPASLimite.getModLinearCres());
+            napPASLL.setµ2((float)modPASLeve.getModLinearCres());
+            System.out.println("Proposição = "+napPASLL.getP());
+            System.out.println("µ  = "+napPASLL.getµ()+"  µ2 = "+napPASLL.getµ2()+"  λ = "+napPASLL.getλ());
+            System.out.println("Gc = "+napPASLL.getGc()+"  Gct= "+napPASLL.getGct());
+            System.out.println("φ  = "+napPASLL.getφ()+"  GCR= "+napPASLL.getGCR()+"  GCest= "+napPASLL.getGcest());
+            System.out.println("φE = "+napPASLL.getφE()+"  µER= "+napPASLL.getµER()+"  µctr= "+napPASLL.getµctr());
+            System.out.println(" ");
+
+            //Relação entre (PAS Limite x PAS Leve) x Moderada - PASLLM
+            NAP napPASLLM = new NAP();
+            napPASLLM.setP((String)"Relação entre Pressão Arterial Sistólica - PAS (Limite x Leve) x Moderada");
+            napPASLLM.setµ((float)napPASLL.getµER());
+            napPASLLM.setµ2((float)modPASModerada.getModLinearCresMin5());
+            System.out.println("Proposição = "+napPASLLM.getP());
+            System.out.println("µ  = "+napPASLLM.getµ()+"  µ2 = "+napPASLLM.getµ2()+"  λ = "+napPASLLM.getλ());
+            System.out.println("Gc = "+napPASLLM.getGc()+"  Gct= "+napPASLLM.getGct());
+            System.out.println("φ  = "+napPASLLM.getφ()+"  GCR= "+napPASLLM.getGCR()+"  GCest= "+napPASLL.getGcest());
+            System.out.println("φE = "+napPASLLM.getφE()+"  µER= "+napPASLLM.getµER()+"  µctr= "+napPASLLM.getµctr());
+            System.out.println(" ");
+        
+            //Relação entre (PAS Limite x PAS Leve) x Moderada - PASLLM
+            NAP napPASLLMG = new NAP();
+            napPASLLMG.setP((String)"Relação entre Pressão Arterial Sistólica - PAS ((Limite x Leve) x Moderada) x Grave");
+            napPASLLMG.setµ((float)napPASLLM.getµER());
+            napPASLLMG.setµ2((float)modPASGrave.getModLinearCresMin5());
+            System.out.println("Proposição = "+napPASLLMG.getP());
+            System.out.println("µ  = "+napPASLLMG.getµ()+"  µ2 = "+napPASLLMG.getµ2()+"  λ = "+napPASLLMG.getλ());
+            System.out.println("Gc = "+napPASLLMG.getGc()+"  Gct= "+napPASLLMG.getGct());
+            System.out.println("φ  = "+napPASLLMG.getφ()+"  GCR= "+napPASLLMG.getGCR()+"  GCest= "+napPASLL.getGcest());
+            System.out.println("φE = "+napPASLLMG.getφE()+"  µER= "+napPASLLMG.getµER()+"  µctr= "+napPASLLMG.getµctr());
+            System.out.println(" ");
+
+            System.out.println("Configuração para Análise de Pressão Arterial Diastólica - PAD");
+            //System.out.println(" ");
+            
+            //Relação entre PAS Limite e PAS Leve - PASLL
+            NAP napPADLL = new NAP();
+            napPADLL.setP((String)"Relação entre Pressão Arterial Diastólica - PAD Limite x Leve");
+            napPADLL.setµ((float)modPADLimite.getModLinearCres());
+            napPADLL.setµ2((float)modPADLeve.getModLinearCres());
+            System.out.println("Proposição = "+napPADLL.getP());
+            System.out.println("µ  = "+napPADLL.getµ()+"  µ2 = "+napPADLL.getµ2()+"  λ = "+napPADLL.getλ());
+            System.out.println("Gc = "+napPADLL.getGc()+"  Gct= "+napPADLL.getGct());
+            System.out.println("φ  = "+napPADLL.getφ()+"  GCR= "+napPADLL.getGCR()+"  GCest= "+napPADLL.getGcest());
+            System.out.println("φE = "+napPADLL.getφE()+"  µER= "+napPADLL.getµER()+"  µctr= "+napPADLL.getµctr());
+            System.out.println(" ");
+
+            //Relação entre (PAS Limite x PAS Leve) x Moderada - PASLLM
+            NAP napPADLLM = new NAP();
+            napPADLLM.setP((String)"Relação entre Pressão Arterial Diastólica - PAD  (Limite x Leve) x Moderada");
+            napPADLLM.setµ((float)napPADLL.getµER());
+            napPADLLM.setµ2((float)modPADModerada.getModLinearCresMin5());
+            System.out.println("Proposição = "+napPADLLM.getP());
+            System.out.println("µ  = "+napPADLLM.getµ()+"  µ2 = "+napPADLLM.getµ2()+"  λ = "+napPADLLM.getλ());
+            System.out.println("Gc = "+napPADLLM.getGc()+"  Gct= "+napPADLLM.getGct());
+            System.out.println("φ  = "+napPADLLM.getφ()+"  GCR= "+napPADLLM.getGCR()+"  GCest= "+napPADLL.getGcest());
+            System.out.println("φE = "+napPADLLM.getφE()+"  µER= "+napPADLLM.getµER()+"  µctr= "+napPADLLM.getµctr());
+            System.out.println(" ");
+        
+            //Relação entre (PAS Limite x PAS Leve) x Moderada - PASLLM
+            NAP napPADLLMG = new NAP();
+            napPADLLMG.setP((String)"Relação entre Pressão Arterial Diastólica - PAD ((Limite x Leve) x Moderada) x Grave");
+            napPADLLMG.setµ((float)napPADLLM.getµER());
+            napPADLLMG.setµ2((float)modPADGrave.getModLinearCresMin5());
+            System.out.println("Proposição = "+napPADLLMG.getP());
+            System.out.println("µ  = "+napPADLLMG.getµ()+"  µ2 = "+napPADLLMG.getµ2()+"  λ = "+napPADLLMG.getλ());
+            System.out.println("Gc = "+napPADLLMG.getGc()+"  Gct= "+napPADLLMG.getGct());
+            System.out.println("φ  = "+napPADLLMG.getφ()+"  GCR= "+napPADLLMG.getGCR()+"  GCest= "+napPADLL.getGcest());
+            System.out.println("φE = "+napPADLLMG.getφE()+"  µER= "+napPADLLMG.getµER()+"  µctr= "+napPADLLMG.getµctr());
+            System.out.println(" ");
+
+            //Relação entre PAS x PAD  - PA
+            NAP napPA = new NAP();
+            napPA.setP((String)"Relação entre Pressão Arterial (Sistólica x Diastólica) - PA ");
+            napPA.setµ((float)napPASLLMG.getµER()); // PAS final
+            napPA.setµ2((float)napPADLLMG.getµER());// PAD final
+            System.out.println("Proposição = "+napPA.getP());
+            System.out.println("µ  = "+napPA.getµ()+"  µ2 = "+napPA.getµ2()+"  λ = "+napPA.getλ());
+            System.out.println("Gc = "+napPA.getGc()+"  Gct= "+napPA.getGct());
+            System.out.println("φ  = "+napPA.getφ()+"  GCR= "+napPA.getGCR()+"  GCest= "+napPADLL.getGcest());
+            System.out.println("φE = "+napPA.getφE()+"  µER= "+napPA.getµER()+"  µctr= "+napPA.getµctr());
+            System.out.println(" ");
+            
+            // Instância Nó GRDC - Resultado da Classificação das evidência do grupo risco analisadas
+            NAP napGRDC = new NAP();
+            napGRDC.setP((String)"Grau de Evidência de Pertinência a Grupo de Riscos de Doênças Cardiovasculares");
+            napGRDC.setµ(napPGR.getµER());
+            napGRDC.setµ2(napPA.getµER());
+            System.out.println("Proposição = "+napGRDC.getP());
+            System.out.println("µ  = "+napGRDC.getµ()+"  µ2 = "+napGRDC.getµ2()+"  λ = "+napGRDC.getλ());
+            System.out.println("Gc = "+napGRDC.getGc()+"  Gct= "+napGRDC.getGct());
+            System.out.println("φ  = "+napGRDC.getφ()+"  GCR= "+napGRDC.getGCR());
+            System.out.println("φE = "+napGRDC.getφE()+"  µER= "+napGRDC.getµER()+"  µctr= "+napGRDC.getµctr());
+            System.out.println(" ");
+    }
+}
